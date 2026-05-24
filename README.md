@@ -1,4 +1,4 @@
-# Internship Opportunity Tracker — 2027 Batch (3rd Year BTech CSE)
+# Internship Opportunity Tracker : 2027 & 2028 Batch (BTech CSE)
 
 > Researched pathways across 40+ companies · Ranked by profile fit · Backend / SDE roles
 
