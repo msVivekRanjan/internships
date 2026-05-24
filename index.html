@@ -1,461 +1,388 @@
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-
-:root{--bg:#f5f7fb;--card:#ffffff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--primary:#2563eb;--primary-light:#dbeafe;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--shadow:0 10px 30px rgba(0,0,0,0.08);--radius:16px;}
-
-body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(to bottom right,#eef4ff,#f8fafc);color:var(--text);padding:32px;line-height:1.6;min-height:100vh;font-size:15px;}
-
-body>*{max-width:1400px;margin-left:auto;margin-right:auto;}
-
-.hdr{background:rgba(255,255,255,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.4);border-radius:24px;padding:28px;margin-bottom:24px;box-shadow:var(--shadow);}
-
-.hdr h1{font-size:32px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:-0.5px;}
-
-.hdr p{font-size:15px;color:var(--muted);}
-
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:24px;}
-
-.stat{background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.5);border-radius:20px;padding:24px;text-align:left;box-shadow:var(--shadow);transition:all 0.25s ease;}
-
-.stat:hover{transform:translateY(-4px);}
-
-.stat-n{font-size:34px;font-weight:700;margin-bottom:6px;color:var(--primary);}
-
-.stat-l{font-size:13px;color:var(--muted);font-weight:500;}
-
-.controls{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px;padding:20px;background:rgba(255,255,255,0.88);border-radius:20px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.5);}
-
-.controls input,.controls select{height:46px;border:1px solid var(--border);border-radius:12px;background:#fff;padding:0 14px;font-size:15px;color:var(--text);transition:all 0.2s ease;outline:none;}
-
-.controls input{flex:1;min-width:240px;}
-
-.controls input:focus,.controls select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,0.12);}
-
-.tbl-wrap{background:rgba(255,255,255,0.9);border-radius:24px;overflow-x:auto;-webkit-overflow-scrolling:touch;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.5);}
-
-table{width:100%;border-collapse:separate;border-spacing:0;min-width:1200px;font-size:14px;}
-
-thead{position:sticky;top:0;z-index:10;}
-
-th{background:#f8fafc;color:#475569;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;padding:18px 16px;border-bottom:1px solid var(--border);white-space:nowrap;}
-
-td{padding:18px 16px;border-bottom:1px solid #f1f5f9;vertical-align:top;color:#1e293b;font-size:14px;}
-
-tbody tr{transition:all 0.2s ease;}
-
-tbody tr:hover{background:#f8fbff;transform:scale(1.001);}
-
-.badge{display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.2px;white-space:nowrap;}
-
-.b-hack{background:#dcfce7;color:#166534;}
-
-.b-dir{background:#dbeafe;color:#1d4ed8;}
-
-.b-fel{background:#ede9fe;color:#6d28d9;}
-
-.b-prog{background:#fef3c7;color:#92400e;}
-
-.b-comp{background:#fee2e2;color:#b91c1c;}
-
-.b-open{background:#cffafe;color:#155e75;}
-
-.fit-high{color:var(--success);font-weight:700;}
-
-.fit-med{color:var(--warning);font-weight:700;}
-
-.fit-low{color:var(--danger);font-weight:700;}
-
-.diff-e{color:var(--success);font-weight:600;}
-
-.diff-m{color:var(--warning);font-weight:600;}
-
-.diff-h{color:#ea580c;font-weight:700;}
-
-.diff-vh{color:var(--danger);font-weight:700;}
-
-.prob-bar{display:flex;align-items:center;gap:10px;}
-
-.prob-track{flex:1;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;min-width:90px;}
-
-.prob-fill{height:100%;border-radius:999px;transition:width 0.3s ease;}
-
-.flag-urgent{display:inline-flex;align-items:center;margin-left:8px;background:#fee2e2;color:#b91c1c;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700;}
-
-.link-btn{display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:#fff;text-decoration:none;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:600;transition:all 0.2s ease;box-shadow:0 4px 12px rgba(37,99,235,0.2);}
-
-.link-btn:hover{background:#1d4ed8;transform:translateY(-2px);}
-
-.note{font-size:12px;line-height:1.6;color:#475569;max-width:280px;}
-
-.tip-toggle{display:inline-block;margin-top:8px;font-size:12px;color:var(--primary);font-weight:600;cursor:pointer;transition:opacity 0.2s ease;}
-
-.tip-toggle:hover{opacity:0.7;}
-
-.no-results{padding:50px;text-align:center;color:var(--muted);font-size:15px;}
-
-.sort-arrow{margin-left:4px;opacity:0.5;}
-
-div[style*="margin-top:12px"]{margin-top:20px!important;background:rgba(255,255,255,0.85);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);color:#475569!important;font-size:12px!important;border:1px solid rgba(255,255,255,0.5);}
-
-::-webkit-scrollbar{width:10px;height:10px;}
-
-::-webkit-scrollbar-track{background:#e5e7eb;border-radius:10px;}
-
-::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:10px;}
-
-::-webkit-scrollbar-thumb:hover{background:#64748b;}
-
-/* MOBILE OPTIMIZATION */
-@media (max-width:768px){
-
-body{padding:12px;font-size:16px;line-height:1.7;}
-
-.hdr{padding:20px;border-radius:18px;}
-
-.hdr h1{font-size:28px;line-height:1.3;}
-
-.hdr p{font-size:15px;}
-
-.stats{grid-template-columns:1fr;gap:14px;}
-
-.stat{padding:20px;}
-
-.stat-n{font-size:30px;}
-
-.stat-l{font-size:14px;}
-
-.controls{flex-direction:column;padding:16px;gap:12px;}
-
-.controls input,.controls select{width:100%;height:50px;font-size:16px;}
-
-.tbl-wrap{border-radius:18px;overflow-x:auto;}
-
-table{min-width:950px;font-size:15px;}
-
-th{font-size:14px;padding:16px 14px;}
-
-td{font-size:15px;padding:16px 14px;line-height:1.6;}
-
-.badge{font-size:12px;padding:7px 13px;}
-
-.note{font-size:14px;max-width:none;}
-
-.link-btn{font-size:14px;padding:11px 15px;}
-
-.prob-track{min-width:120px;height:12px;}
-
-.tip-toggle{font-size:13px;}
-
-.no-results{padding:35px 20px;font-size:16px;}
-
-div[style*="margin-top:12px"]{font-size:13px!important;padding:16px;}
-
-::-webkit-scrollbar{height:6px;}
-}
-
-@media (max-width:480px){
-
-body{padding:10px;}
-
-.hdr h1{font-size:24px;}
-
-table{min-width:850px;}
-
-th{font-size:13px;}
-
-td{font-size:14px;}
-
-.controls input,.controls select{font-size:15px;}
-
-.link-btn{font-size:13px;width:100%;justify-content:center;}
-}
-</style>
-
-<div class="hdr">
-  <h1><i class="ti ti-rocket" aria-hidden="true"></i> Internship Opportunity Tracker: 2027 & 2028 batch (BTech CSE)</h1>
-  <p>Researched pathways across 150+ companies · Ranked by profile fit · Backend / SDE roles</p>
-</div>
-
-<div class="stats" id="statBar">
-  <div class="stat"><div class="stat-n" id="sTotal">0</div><div class="stat-l">Total opportunities</div></div>
-  <div class="stat"><div class="stat-n" id="sUrgent">0</div><div class="stat-l">Deadline ≤ July 2026</div></div>
-  <div class="stat"><div class="stat-n" id="sHigh">0</div><div class="stat-l">High fit for your profile</div></div>
-  <div class="stat"><div class="stat-n" id="sOpen">0</div><div class="stat-l">Currently open</div></div>
-</div>
-
-<div class="controls">
-  <input type="text" id="search" placeholder="Search company or opportunity..." />
-  <select id="fType">
-    <option value="">All types</option>
-    <option value="Direct Internship">Direct internship</option>
-    <option value="Hackathon">Hackathon → internship</option>
-    <option value="Coding Challenge">Coding challenge</option>
-    <option value="Fellowship">Fellowship</option>
-    <option value="Program">Program</option>
-    <option value="Open Source">Open source</option>
-  </select>
-  <select id="fFit">
-    <option value="">All fit levels</option>
-    <option value="High">High fit</option>
-    <option value="Medium">Medium fit</option>
-    <option value="Low">Low fit</option>
-  </select>
-  <select id="fStatus">
-    <option value="">All statuses</option>
-    <option value="Open">Open / active</option>
-    <option value="Closed">Closed (reopens)</option>
-    <option value="Expected">Expected soon</option>
-  </select>
-  <select id="fSort">
-    <option value="rank">Sort: profile rank</option>
-    <option value="prob">Sort: selection probability</option>
-    <option value="company">Sort: company name</option>
-    <option value="deadline">Sort: deadline</option>
-  </select>
-</div>
-
-<div class="tbl-wrap">
-<table id="mainTable">
-<thead>
-<tr>
-  <th>#</th>
-  <th>Company</th>
-  <th>Opportunity</th>
-  <th>Type</th>
-  <th>Eligibility</th>
-  <th>Role</th>
-  <th>Deadline</th>
-  <th>Profile fit</th>
-  <th>Difficulty</th>
-  <th>Selection chance</th>
-  <th>Apply / link</th>
-  <th>Strategy tip</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
-<div class="no-results" id="noResults" style="display:none">No opportunities match your filters.</div>
-</div>
-
-<div style="margin-top:12px;font-size:11px;color:var(--color-text-tertiary);line-height:1.6">
-  <strong>Legend:</strong> Difficulty — E: Easy, M: Medium, H: Hard, VH: Very Hard &nbsp;|&nbsp; Probabilities are estimates for a Tier-2 off-campus candidate with strong DSA + projects &nbsp;|&nbsp; Links may open company official portals or reliable aggregators &nbsp;|&nbsp; Data researched May 2026, verify before applying. &nbsp;|&nbsp; For more details contact <a href="https://vivekrs.in">the developer.</a>
-</div>
-
-<script>
-const DATA = [
-  {rank:1,company:"Flipkart",opp:"GRiD 8.0 (2026 edition)",type:"Hackathon",elig:"2027/2028 batch BTech/MTech, any college",role:"SDE Intern → SDE-1",deadline:"Expected Jul 2026",urgent:false,status:"Expected",fit:"High",diff:"M",prob:35,link:"https://unstop.com/hackathons/flipkart-grid",tip:"3rd-year students get summer internship interviews after qualifying rounds. Start DSA prep now — Round 2 is pure coding. GRiD alumni say the profile shortlisting round (Round 1) favors hackathon wins and projects. Strong resume alone clears it."},
-  {rank:2,company:"Adobe",opp:"India Hackathon 2026",type:"Hackathon",elig:"2027–2029 batch, teams of 2–3 from same college",role:"SDE/Research Intern (₹1L/mo stipend)",deadline:"Expected Jun–Jul 2026",urgent:true,status:"Expected",fit:"High",diff:"M",prob:30,link:"https://unstop.com/hackathons/adobe-india-hackathon",tip:"Only 2027 batch eligible for PPIs. 4 rounds: MCQ+DSA, prototype build, product round, live finale at Adobe Noida. Form a strong team — team avg score decides shortlisting. Focus on document AI / intelligent PDF problems from past editions."},
-  {rank:3,company:"Goldman Sachs",opp:"India Hackathon 2026 (GSIH)",type:"Hackathon",elig:"2027/2028 batch, select colleges (IITs/NITs/BITS + others)",role:"SDE/Quant Intern via PPI",deadline:"May 2026 (registration closed, next edition ~Apr 2027)",urgent:false,status:"Closed",fit:"High",diff:"H",prob:18,link:"https://www.goldmansachs.com/careers/students/programs-and-internships/india/hackathon",tip:"12-hour coding marathon on HackerRank. CS + Quant tracks. Top finalists get PPI. Even reaching top-500 looks stellar on resume. Tier-2 colleges are on the eligible list — verify your college. Prep: competitive programming, financial algorithms."},
-  {rank:4,company:"Amazon",opp:"SDE Intern (Summer/6-month)",type:"Direct Internship",elig:"2027 batch BTech/MTech, CS/IT; no active backlogs",role:"SDE-1 Intern",deadline:"Rolling — apply immediately on Amazon Jobs",urgent:true,status:"Open",fit:"High",diff:"H",prob:12,link:"https://www.amazon.jobs/en/job_categories/software-development",tip:"Apply directly on Amazon Jobs. Off-campus applications accepted — no college filter. Coding assessment sent to all applicants. OA has 2 DSA problems (1h). Then 2–3 tech interviews + 1 behavioral (Leadership Principles). 200+ LeetCode and strong DSA is your exact target. AWS exposure is a big plus for you."},
-  {rank:5,company:"Walmart Global Tech",opp:"Sparkplug Summer Internship",type:"Coding Challenge",elig:"3rd-year BTech from 24 select colleges; CGPA ≥7.0; no backlogs",role:"Software Engineering Intern (₹1L/mo)",deadline:"Nov 2025 (closed) → Nov 2026 expected",urgent:false,status:"Closed",fit:"High",diff:"H",prob:15,link:"https://unstop.com/internships/sparkplug-summer-internship-walmart-global-tech-india",tip:"ITER SOA is unlikely on the 24-college list — check Unstop each Nov for the updated list. If eligible: MCQ + 2 hard DSA problems (90 mins). AI/ML + scalable systems focus matches your learning trajectory perfectly."},
-  {rank:6,company:"Microsoft",opp:"Software Engineer Intern (Bangalore)",type:"Direct Internship",elig:"Final/pre-final year BTech/MTech CS/IT; graduating 2027",role:"SWE Intern",deadline:"Rolling — apply via Microsoft Careers",urgent:false,status:"Open",fit:"High",diff:"VH",prob:8,link:"https://careers.microsoft.com/v2/global/en/jobs",tip:"Mostly campus-driven but off-campus via LinkedIn/careers portal works if resume is exceptional. Strong GitHub, open-source contributions, and system design knowledge help. FAANG-level DSA required. Focus on getting a referral via LinkedIn outreach."},
-  {rank:7,company:"Razorpay",opp:"SDE Intern (Backend Engineering)",type:"Direct Internship",elig:"Pre-final/final year BTech; open to all colleges",role:"Backend SDE Intern",deadline:"Rolling — Razorpay Careers",urgent:true,status:"Open",fit:"High",diff:"M",prob:28,link:"https://razorpay.com/jobs/",tip:"Django + backend skills match Razorpay stack (Python/Go). Apply directly on careers page. Resume shortlist → DSA test → 2 tech interviews. Referrals from LinkedIn employees significantly boost shortlisting odds. Apply now — rolling basis."},
-  {rank:8,company:"Meesho",opp:"SDE Intern (Backend)",type:"Direct Internship",elig:"Pre-final year BTech, any college; strong DSA",role:"Backend SDE Intern",deadline:"Rolling — Meesho careers",urgent:true,status:"Open",fit:"High",diff:"M",prob:25,link:"https://meesho.io/jobs",tip:"Meesho explicitly values skills over college pedigree — their SDE intern JD says 'no matter which college or branch'. Django/Python + DSA is a perfect match. Stipend ₹35K/mo historically. Short 6-month internship with strong PPO conversion."},
-  {rank:9,company:"Zomato",opp:"SDE Intern (2027 batch)",type:"Direct Internship",elig:"2027 batch only; BTech CS/related; Bangalore on-site",role:"SDE Intern → FTE on performance",deadline:"Rolling — check Zomato careers July 2026",urgent:false,status:"Expected",fit:"High",diff:"M",prob:22,link:"https://www.zomato.com/careers",tip:"₹1L/mo stipend. 6-month internship starting Aug/July. Strong conversion to FTE. Past interns say 2 DSA rounds + 1 system design + HM round. Backend + distributed systems knowledge is key."},
-  {rank:10,company:"PhonePe",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final year BTech; CS/IT; open hiring",role:"Backend SDE Intern",deadline:"Rolling — PhonePe Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://careers.phonepe.com/",tip:"Fintech backend role — Java/Go preferred but Python accepted. Strong system design + DSA. Apply directly, no campus filter. PhonePe pays top startup-level stipend (₹60K–80K range reported). Prep: distributed systems, payment systems basics."},
-  {rank:11,company:"Groww",opp:"IT Audit / SDE Intern",type:"Direct Internship",elig:"BTech students, all years; Bangalore",role:"SDE Intern / Analyst Intern",deadline:"Rolling — Groww careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://groww.in/careers",tip:"Fintech startup, values problem-solving. Apply directly. Python/Django background is a direct match for their data-driven backend. LinkedIn outreach to Groww engineers for referrals is highly effective."},
-  {rank:12,company:"Swiggy",opp:"SDE Intern / ASDE",type:"Direct Internship",elig:"2027 batch BTech; CS/IT/related; ML + backend skills valued",role:"SDE Intern / Associate SDE",deadline:"Rolling — Swiggy Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:22,link:"https://careers.swiggy.com/",tip:"Tech-first company; ML + backend = perfect match. Off-campus drive happens periodically. Monitor Swiggy Careers + LinkedIn. Fast-paced engineering culture; Docker/CI-CD experience is a differentiator."},
-  {rank:13,company:"SAP Labs",opp:"Student Intern (Software Engineering)",type:"Direct Internship",elig:"Pre-final year BTech CS/IT; CGPA ≥7.0; Bangalore/Pune/Gurgaon",role:"SWE Intern",deadline:"Rolling — SAP Careers India",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://jobs.sap.com/",tip:"SAP accepts interns from Tier-2 colleges. Strong Java + cloud (AWS) + backend = great fit. Apply on SAP Careers with 'intern' filter + India location. Lower competition than FAANG. 6-month paid internship with strong structure."},
-  {rank:14,company:"Salesforce",opp:"Intern Software Engineer (Hyderabad/Bangalore)",type:"Direct Internship",elig:"Pre-final BTech CS/related; 2027 batch",role:"SWE Intern",deadline:"Rolling — Salesforce Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:15,link:"https://www.salesforce.com/company/careers/",tip:"Cloud-focused company; AWS + Docker knowledge is directly relevant. Off-campus applications accepted. OA + 3–4 interview rounds. Salesforce values leadership/PoR experience — your club leadership is a plus."},
-  {rank:15,company:"Cisco",opp:"Software Engineer Trainee / Virtual Intern (AICTE)",type:"Program",elig:"BTech all years; Virtual track open to all via AICTE portal",role:"SWE Intern / Trainee",deadline:"Rolling — AICTE portal + Cisco Careers",urgent:true,status:"Open",fit:"High",diff:"M",prob:32,link:"https://aicte-internship.eduskills.academy/",tip:"Two tracks: (1) AICTE virtual internship — 50K free slots, certificate, easy to get. (2) Full Cisco internship via careers portal (harder). The AICTE track adds a credible cert to your resume with minimal effort. Do it while gunning for the real one."},
-  {rank:16,company:"Uber",opp:"Software Engineer I / Intern",type:"Direct Internship",elig:"2027 batch BTech; strong DSA + systems knowledge",role:"SWE/Backend Intern",deadline:"Rolling — Uber Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:12,link:"https://www.uber.com/in/en/careers/",tip:"Uber India (Bangalore) hires aggressively. Backend + distributed systems focus. Higher bar than most Indian startups. Your Docker/CI-CD/AWS combo is a differentiator. OA → 2 tech rounds → system design."},
-  {rank:17,company:"Nvidia",opp:"Software Engineering Intern (India)",type:"Direct Internship",elig:"Pre-final/final BTech CS/EE; strong C++/Python + ML",role:"SWE Intern / ML Intern",deadline:"Rolling — Nvidia Careers",urgent:false,status:"Open",fit:"Medium",diff:"VH",prob:8,link:"https://www.nvidia.com/en-in/about-nvidia/careers/",tip:"Extremely competitive. Your ML learning + Python skills are relevant. Prep heavily on GPU computing basics, CUDA concepts (not required but impressive), and standard SWE rounds. Tier-2 candidates have gotten in with exceptional projects."},
-  {rank:18,company:"Postman",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final year BTech; API/backend knowledge",role:"Backend SDE Intern",deadline:"Rolling — Postman Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://www.postman.com/company/careers/",tip:"API-first company; your backend + REST experience is a perfect cultural fit. Smaller company = less competition. Apply directly on careers page + LinkedIn. Show API-heavy projects in your resume."},
-  {rank:19,company:"Intuit",opp:"Software Engineer Intern (Bangalore)",type:"Direct Internship",elig:"Pre-final BTech CS/related; 2027 batch",role:"SWE/Backend Intern",deadline:"Rolling — Intuit Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:16,link:"https://careers.intuit.com/",tip:"Fintech-adjacent; backend + cloud is valued. Less cutthroat than pure FAANG. 2–3 interview rounds. Company culture matches your PoR/leadership experience well."},
-  {rank:20,company:"Dell Technologies",opp:"Software Intern (Intern Req)",type:"Direct Internship",elig:"BTech pre-final; CS/IT; Hyderabad/Bangalore",role:"SWE Intern",deadline:"Rolling — Dell Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://jobs.dell.com/",tip:"Dell India actively hires Tier-2 off-campus interns. Lower DSA bar than product startups but needs strong fundamentals. Cloud + Linux shell experience = direct match. Good entry point; PPO conversion happens."},
-  {rank:21,company:"Intel",opp:"Graduate Intern / Software Intern",type:"Direct Internship",elig:"Pre-final/final BTech CS/EE; CGPA ≥7.5",role:"SWE/Systems Intern",deadline:"Rolling — Intel Careers India",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:15,link:"https://jobs.intel.com/",tip:"Intel India (Bangalore/Hyderabad) hires software interns. Systems + OS knowledge valued. Your Linux + shell scripting experience is a plus. Lower software-only DSA bar; more emphasis on CS fundamentals."},
-  {rank:22,company:"Qualcomm",opp:"Interim Engineering Intern",type:"Direct Internship",elig:"Pre-final BTech CS/EE; C++/Python; Hyderabad/Bangalore",role:"SWE Intern",deadline:"Rolling — Qualcomm Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:14,link:"https://careers.qualcomm.com/careers",tip:"Embedded + systems focus but software tracks exist. Prep OS/networking fundamentals. Your CI/CD + Linux knowledge is relevant. Less competition from pure software CS folks who skip hardware companies."},
-  {rank:23,company:"SAP / Ariba",opp:"Working Student / Intern Program",type:"Direct Internship",elig:"Pre-final year; any college; CGPA 7+",role:"Backend SWE Intern",deadline:"Rolling — SAP Jobs portal",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://jobs.sap.com/",tip:"SAP Labs Bangalore and Pune consistently hire interns. The intern application is often listed as 'Working Student' or 'Student Intern'. Java + cloud background is highly valued. Lower competition vs pure product companies."},
-  {rank:24,company:"NetApp",opp:"Software Engineering Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong Python/Java + storage basics",role:"SWE Intern",deadline:"Rolling — NetApp Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://careers.netapp.com/",tip:"NetApp India (Bangalore/Pune) regularly posts intern roles. Cloud storage + distributed systems = relevant. Less brand recognition = less competition. Good PPO track record."},
-  {rank:25,company:"Mastercard",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS/IT; CGPA ≥7.0; Pune/Vadodara",role:"SWE/Backend Intern",deadline:"Rolling — Mastercard Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://careers.mastercard.com/",tip:"Fintech + payments domain = direct match with your interests and Razorpay-adjacent knowledge. Strong backend + DSA needed. Mastercard India hires from Tier-2 colleges via off-campus. Apply directly."},
-  {rank:26,company:"PayPal",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS/related; Chennai/Bangalore",role:"SWE/Backend Intern",deadline:"Rolling — PayPal Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:16,link:"https://careers.pypl.com/home/",tip:"Payments + backend = your zone. PayPal India hires off-campus. Apply via careers portal. Strong DSA + system design prep needed. OA → 2–3 tech rounds."},
-  {rank:27,company:"Morgan Stanley",opp:"Technology Summer Analyst (Intern) — India",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥8.0 preferred; Mumbai/Bangalore",role:"Technology Analyst Intern",deadline:"Applications open Oct–Dec each year",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:10,link:"https://morganstanley.com/campus/india",tip:"Finance-technology hybrid role. Very high bar — IIT/NIT heavy but exceptional Tier-2 candidates with strong projects have broken through. Apply in Oct–Nov 2026. Focus on core CS fundamentals + behavioral prep."},
-  {rank:28,company:"JPMorgan Chase",opp:"Software Engineer Intern (India)",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.5; all colleges",role:"SWE Intern",deadline:"Applications open Sep–Nov each year",urgent:false,status:"Closed",fit:"Medium",diff:"H",prob:14,link:"https://jpmc.fa.oraclecloud.com/",tip:"JPMC India (Hyderabad/Bangalore/Mumbai) hires off-campus via careers portal. Code for Good hackathon is an alternate entry. Apply in Oct 2026. Decent conversion from Tier-2 colleges."},
-  {rank:29,company:"JPMC Code for Good",opp:"Code for Good Hackathon",type:"Hackathon",elig:"BTech any year; all colleges eligible; teams",role:"SWE/Data track → internship interview",deadline:"Applications Sep–Oct each year",urgent:false,status:"Expected",fit:"High",diff:"M",prob:30,link:"https://careers.jpmorgan.com/global/en/students/programs/code-for-good",tip:"24-hour hackathon building solutions for NGOs. Top performers get fast-tracked for internship interviews. Tier-2 friendly. Social impact angle + your hackathon experience is a strong differentiator. Prep for both technical and communication rounds."},
-  {rank:30,company:"Dunzo",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend knowledge; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Dunzo Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://www.dunzo.com/",tip:"High-growth startup. Your Django + Docker skill is their exact stack. Less competitive than big tech. Apply on LinkedIn/careers page. Good PPO potential."},
-  {rank:31,company:"Upstox",opp:"SDE Backend Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Go/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Upstox Jobs",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://upstox.com/company/careers/",tip:"Fintech + trading platform. Backend + Python = strong match. Less known = less competition. Apply on LinkedIn. 2 rounds: DSA + system design basics. Stipend ~₹35–50K."},
-  {rank:32,company:"CoinDCX",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Node/Go knowledge",role:"Backend SDE Intern",deadline:"Rolling — CoinDCX Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:25,link:"https://coindcx.com/careers/",tip:"Crypto + fintech. Your backend skills match. Smaller company = more ownership from day one. Good for building portfolio. Apply directly or via LinkedIn."},
-  {rank:33,company:"Zerodha",opp:"Software Intern (Rare openings)",type:"Direct Internship",elig:"Pre-final BTech; exceptional Python/Go skills",role:"Backend Developer Intern",deadline:"Very rare — monitor Zerodha GitHub + Twitter",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:5,link:"https://zerodha.com/careers/",tip:"Zerodha barely advertises. They hire through GitHub contributions + cold outreach. Follow @zerodhaonline on Twitter. Contribute to Kite Connect API open-source projects. A PR merged into their repo is worth 10 applications."},
-  {rank:34,company:"CRED",opp:"SDE Intern (when open)",type:"Direct Internship",elig:"Pre-final BTech; exceptional DSA; Bangalore",role:"Backend SDE Intern",deadline:"Rare openings — monitor CRED Careers + LinkedIn",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:8,link:"https://careers.cred.club/",tip:"Very selective. Pay is top-of-market but interviews are grueling (4+ rounds, hard DSA + system design). Keep as an aspirational target. Apply once LeetCode 300+ hard problems solved."},
-  {rank:35,company:"Rippling",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech; strong DSA + distributed systems",role:"SWE/Backend Intern",deadline:"Rolling — Rippling Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:12,link:"https://www.rippling.com/careers",tip:"US-based but Bangalore office hires. HR-tech + backend. Strong DSA + good projects needed. Less competitive than FAANG in India. Good resume + referral via LinkedIn outreach."},
-  {rank:36,company:"Rubrik",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech; CS fundamentals + cloud knowledge",role:"SWE Intern",deadline:"Rolling — Rubrik Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:14,link:"https://www.rubrik.com/company/careers",tip:"Cloud data management. Less well-known = less competition. AWS + distributed systems knowledge is a direct fit. 2–3 rounds."},
-  {rank:37,company:"Freshworks",opp:"Software Engineer Intern (Chennai/Bangalore)",type:"Direct Internship",elig:"Pre-final BTech; any college; CGPA ≥7.0",role:"SWE Intern",deadline:"Rolling — Freshworks Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://careers.freshworks.com/",tip:"SaaS company, very Tier-2 friendly historically. Python/Django is their core stack — perfect match. Apply directly. 2 rounds: DSA + cultural. Strong PPO conversion rate. Chennai HQ = good for South India candidates."},
-  {rank:38,company:"Zoho",opp:"Software Intern (Project-based)",type:"Direct Internship",elig:"BTech pre-final; CGPA ≥6.5; Chennai primarily",role:"SWE Intern",deadline:"Rolling — Zoho Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:32,link:"https://careers.zohocorp.com/",tip:"Tier-2 college friendly. Zoho values coding skills over pedigree. Written test → coding test → interview. Good learning environment. Not the highest stipend but great for product experience."},
-  {rank:39,company:"Ola / OLA Electric",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; backend/Python/Java",role:"Backend SDE Intern",deadline:"Rolling — Ola Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.olacabs.com/corporate/jobs",tip:"Mobility tech + EV software. Your backend + ML learning is relevant. Apply on LinkedIn. 2 rounds typical. Good for product + distributed systems experience."},
-  {rank:40,company:"ShareChat / Moj",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; strong DSA; Bangalore",role:"Backend/ML SDE Intern",deadline:"Rolling — ShareChat Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://sharechat.com/careers",tip:"Social media + vernacular tech. ML + backend = strong fit. 35–50 LPA range for FTE suggests competitive intern process. Your ML learning is timely."},
-  {rank:41,company:"Samsung R&D India",opp:"PRISM Developer Program",type:"Program",elig:"BTech 2nd–4th year; project collaboration with Samsung mentors",role:"Research Intern / Developer Fellow",deadline:"Applications Jan–Mar each year",urgent:false,status:"Closed",fit:"Medium",diff:"M",prob:35,link:"https://research.samsung.com/prism",tip:"Samsung PRISM is a structured research collaboration program — not a traditional internship but leads to PPO/referrals. Next cycle Jan 2027. Your IoT/embedded (Bhumicare) background + ML interests make this a strong fit. Apply early."},
-  {rank:42,company:"Google",opp:"STEP Intern (Software Training in Engineering Program)",type:"Program",elig:"2nd-year BTech (3rd year after summer 2026 = too late); underrepresented groups; Bangalore",role:"SWE Intern (structured learning track)",deadline:"Rolling — Google Careers India",urgent:false,status:"Closed",fit:"Medium",diff:"H",prob:10,link:"https://careers.google.com/jobs/results/?jex=Entry+Level&jlo=en_US&q=STEP%20intern%20india",tip:"STEP is designed for early-year students. By 3rd year you should apply for standard Google SWE Intern instead. Apply via Google Careers with 'intern' filter. Bar is very high — needs competitive programming + system design."},
-  {rank:43,company:"LinkedIn",opp:"REACH Fellowship / SWE Intern",type:"Fellowship",elig:"Pre-final BTech; underrepresented groups; strong DSA",role:"SWE Intern",deadline:"Rolling — LinkedIn Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:10,link:"https://careers.linkedin.com/reach",tip:"REACH fellowship has DEI criteria. Standard SWE intern track also open. LinkedIn India (Bangalore) hires. Apply via careers + get a referral if possible."},
-  {rank:44,company:"InMobi",opp:"SDE Intern (Mobile/Backend)",type:"Direct Internship",elig:"Pre-final BTech CS; Bangalore",role:"SDE Intern",deadline:"Rolling — InMobi Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.inmobi.com/company/careers/",tip:"AdTech + ML company. Your ML learning + backend is relevant. Apply directly. 2–3 rounds. Tier-2 friendly culture."},
-  {rank:45,company:"Zeta (Directi)",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; strong DSA; any college",role:"Backend SDE Intern",deadline:"Rolling — Zeta Tech Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.zeta.tech/in/careers/",tip:"Fintech + banking-tech. DSA + backend = direct match. Less competition than unicorns. Apply on LinkedIn."},
-  {rank:46,company:"Naukri / InfoEdge",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python; Noida/Delhi",role:"Backend SDE Intern",deadline:"Rolling — InfoEdge Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:28,link:"https://careers.infoedge.in/",tip:"Stable product company. Good for learning product engineering. Apply on Naukri own portal. Less glamorous but solid resume addition."},
-  {rank:47,company:"BigBasket / Tata Digital",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — careers portal",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.bigbasket.com/careers/",tip:"E-commerce + quick commerce. Your Django/Python is their stack. Tata Digital umbrella = stable, good brand. Apply directly."},
-  {rank:48,company:"MakeMyTrip",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; backend/Java/Python",role:"Backend SDE Intern",deadline:"Rolling — MMT Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://careers.makemytrip.com/",tip:"Travel tech + backend systems. Apply directly. 2 rounds typical. Good brand + PPO potential."},
-  {rank:49,company:"Stripe",opp:"Software Engineer Intern (India — rare)",type:"Direct Internship",elig:"Pre-final BTech; exceptional DSA + distributed systems",role:"SWE Intern",deadline:"Rolling — Stripe Careers (monitor)",urgent:false,status:"Expected",fit:"Medium",diff:"VH",prob:6,link:"https://stripe.com/jobs",tip:"Stripe India office (Bangalore) occasionally posts intern roles. Very high bar — on par with Google. Keep as stretch goal. Stipend is exceptional (₹1.5L+/mo range)."},
-  {rank:50,company:"Hackathon ecosystem",opp:"Devfolio / Unstop / MLH hackathons",type:"Hackathon",elig:"All BTech students; open registration",role:"Portfolio builder + startup internship leads",deadline:"Multiple per month — ongoing",urgent:true,status:"Open",fit:"High",diff:"E",prob:60,link:"https://devfolio.co/hackathons",tip:"Win top 3 at any major Devfolio hackathon and startups directly recruit from the leaderboard. Your blood donor app (hackathon project) is portfolio-ready. Enter 2–3 hackathons per month. MLH Fellowship is also a strong open-source pathway."},
-  {rank:51,company:"1MG (Tata Health)",opp:"SDE Intern / Backend Intern",type:"Direct Internship",elig:"Pre-final BTech CS/IT; Python/Java; Gurugram/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — 1mg Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://www.1mg.com/careers",tip:"Health-tech + backend stack. Your Django/Python is a direct match. Tata Digital umbrella gives stability. Less competition than pure fintech unicorns. Apply via LinkedIn or 1mg careers page. 2 rounds typical: DSA + system design basics."},
-  {rank:52,company:"Analytics Vidhya",opp:"Data Science / ML Intern",type:"Direct Internship",elig:"BTech pre-final; Python + ML fundamentals; remote/Delhi",role:"ML/Data Intern",deadline:"Rolling — AV Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:35,link:"https://www.analyticsvidhya.com/careers/",tip:"Your ML learning + Python background is tailor-made here. AV regularly recruits interns to contribute to content, tools, and internal ML pipelines. Less pay but enormous ML learning curve. Great resume line for AI/ML path."},
-  {rank:53,company:"Axis Bank Tech",opp:"Software Intern (Axis Bank IT Division)",type:"Direct Internship",elig:"Pre-final BTech CS/IT; CGPA ≥7.0; Mumbai/Pune",role:"SWE Intern",deadline:"Rolling — Axis Bank Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.axisbank.com/careers",tip:"Banking-tech internships are less competitive than product startups. Good for exposure to large-scale financial systems. Backend + CI/CD knowledge valued. Apply directly; process involves aptitude + tech rounds."},
-  {rank:54,company:"BigBasket",opp:"Software Engineering Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — BigBasket Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:27,link:"https://www.bigbasket.com/careers/",tip:"Quick-commerce + supply chain tech. Django/Python is core to their stack. Tata ownership adds brand value. Apply directly or via LinkedIn. 2 interview rounds. Good PPO conversion for strong performers."},
-  {rank:55,company:"BlackRock",opp:"Technology Analyst Summer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥8.0; Mumbai/Gurgaon",role:"Technology Analyst Intern",deadline:"Applications open Sep–Nov each year",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:8,link:"https://careers.blackrock.com/",tip:"Asset management + fintech. Very high academic bar; IIT/NIT heavy. Off-campus applications accepted but shortlisting is competitive. Apply in Oct 2026. Prep: DSA + SQL + financial systems basics. Strong PoR experience helps in HR rounds."},
-  {rank:56,company:"Bloomberg",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong C++/Python; Mumbai",role:"SWE Intern",deadline:"Rolling — Bloomberg Careers",urgent:false,status:"Open",fit:"Medium",diff:"VH",prob:7,link:"https://careers.bloomberg.com/job/search?el=intern",tip:"One of the highest-paying intern roles in India (₹1.5L+/mo). Extremely competitive. C++ proficiency is near-mandatory. Off-campus via careers portal. Stretch goal — apply after polishing DSA to LC hard level consistently."},
-  {rank:57,company:"BookMyShow",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python + backend; Mumbai",role:"Backend SDE Intern",deadline:"Rolling — BMS Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://in.bookmyshow.com/careers",tip:"Event-tech + ticketing platform. Backend + distributed systems (high-concurrency ticketing) is their core problem. Your backend stack fits well. Apply via LinkedIn. 2–3 rounds."},
-  {rank:58,company:"ClearTax",opp:"SDE Intern (Backend)",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — ClearTax Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://cleartax.in/s/careers",tip:"Tax-tech + fintech. Python-heavy backend. Your Django expertise is a direct match. Smaller team = more ownership. Good for learning product engineering end-to-end. Apply on LinkedIn + careers page."},
-  {rank:59,company:"Cure.fit / Cult.fit",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Cult.fit Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://www.cult.fit/cult.fit/careers",tip:"Health + fitness tech. Python backend + data pipelines. Your ML learning is a bonus here — they use ML for health recommendations. Lean startup culture = high ownership for interns."},
-  {rank:60,company:"DE Shaw",opp:"Software Developer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; exceptional DSA + math; Hyderabad",role:"SWE/Quant Dev Intern",deadline:"Applications open Aug–Oct each year",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:7,link:"https://www.deshawindia.com/careers.shtml",tip:"Quant hedge fund + tech. Very high bar — competitive programming level DSA required. Written test is notoriously difficult. Apply in Sep 2026. Even clearing the first round is a strong resume signal. Keep as a stretch goal."},
-  {rank:61,company:"Delhivery",opp:"Software Intern (Backend/Data)",type:"Direct Internship",elig:"Pre-final BTech CS/IT; Python/Java; Gurgaon/Bangalore",role:"Backend/Data Intern",deadline:"Rolling — Delhivery Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://www.delhivery.com/careers/",tip:"Logistics-tech unicorn. Real-time tracking + distributed backend = interesting problems. Your backend + cloud skills match. Less glamorous than consumer apps but solid engineering exposure. Apply on LinkedIn."},
-  {rank:62,company:"FinBox",opp:"Backend SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Go/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — FinBox Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://finbox.in/careers",tip:"B2B fintech + credit infra. Small team = direct mentorship from senior engineers. Python + backend is their exact stack. High ownership from day one. Apply via LinkedIn — they hire from all colleges."},
-  {rank:63,company:"Freecharge (Axis Bank)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai",role:"SWE Intern",deadline:"Rolling — Axis Bank / Freecharge Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.axisbank.com/careers",tip:"Payments + wallet tech under Axis Bank. Backend skills relevant. Moderate competition. Apply via Axis Bank careers portal since Freecharge is now integrated."},
-  {rank:64,company:"Gojek / GoTo (India office)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS; distributed systems knowledge; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — GoTo Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:15,link:"https://www.gojek.com/en-id/about/careers/",tip:"Super-app + mobility tech. Strong distributed systems + backend focus. Indonesian company with Bangalore office. Less crowded than Indian unicorns. Apply via LinkedIn + careers page."},
-  {rank:65,company:"GitHub (Microsoft India)",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech; strong open-source contributions; remote/Bangalore",role:"SWE Intern",deadline:"Rolling — GitHub Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:14,link:"https://github.com/about/careers",tip:"GitHub is part of Microsoft. Your best hook here is open-source activity — active public repos, merged PRs on popular projects, and a well-maintained GitHub profile. They hire devs who live on GitHub. Build in public actively."},
-  {rank:66,company:"Grab (India Tech Centre)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; distributed systems + backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Grab Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:13,link:"https://grab.careers/",tip:"Southeast Asian super-app with Bangalore tech centre. Competitive but less so than pure Indian unicorns. Strong backend + real-time systems knowledge valued. Apply via Grab careers portal."},
-  {rank:67,company:"Blinkit (Zomato)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Blinkit/Zomato Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://blinkit.com/careers.html",tip:"Quick-commerce + real-time logistics. Your backend skills = direct match. Under Zomato umbrella — apply via Zomato careers page too. High-velocity engineering environment. Good PPO potential."},
-  {rank:68,company:"HackerRank",opp:"Software / Product Intern",type:"Direct Internship",elig:"Pre-final BTech; strong competitive programming + backend",role:"SWE Intern",deadline:"Rolling — HackerRank Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.hackerrank.com/careers",tip:"Ironic but true — HackerRank hires via their own platform. Your 200+ LeetCode and competitive programming background is literally their product use-case. Show your HackerRank profile prominently. US-based but remote/India roles exist."},
-  {rank:69,company:"HDFC Bank Tech",opp:"IT Intern / Graduate Trainee",type:"Direct Internship",elig:"BTech pre-final; CS/IT; CGPA ≥7.0; Mumbai/Pune/Bangalore",role:"IT/SWE Intern",deadline:"Rolling — HDFC Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:20,link:"https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?folderPath=/footer/careers&fileName=careers.html",tip:"Banking-tech. Stable but less cutting-edge engineering. Good for resume diversity. Backend + cloud skills applicable. HDFC tech division (HDFC ErGo, HDFC Life tech) has separate intern tracks — explore all sub-entities."},
-  {rank:70,company:"ICICI Bank Tech / iWork",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; CS/IT; CGPA ≥7.0",role:"IT/SWE Intern",deadline:"Rolling — ICICI Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:20,link:"https://www.icicicareers.com/",tip:"Large banking IT division. Less competitive than fintech startups. Good for exposure to large-scale enterprise systems. Apply directly. Aptitude + tech screening."},
-  {rank:71,company:"Indeed (India office)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS; Hyderabad; strong DSA",role:"SWE/Backend Intern",deadline:"Rolling — Indeed Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:14,link:"https://www.indeed.com/cmp/Indeed/jobs",tip:"Job-search platform with Hyderabad tech office. Product engineering + backend. Competitive but less known to most Indian students = lower applicant volume. Apply via Indeed's own job board (meta move)."},
-  {rank:72,company:"Instamojo",opp:"Backend SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Django; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Instamojo Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:32,link:"https://www.instamojo.com/careers/",tip:"SME payments platform. Django is literally their primary framework — your skill is a direct bullseye. Small team = immediate meaningful contribution. Very accessible to Tier-2 off-campus candidates. Apply now."},
-  {rank:73,company:"Kotak Mahindra Bank Tech",opp:"IT Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.0; Mumbai",role:"IT/SWE Intern",deadline:"Rolling — Kotak Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:20,link:"https://www.kotak.com/en/careers.html",tip:"Banking-tech. Stable internship environment. Less innovative than fintech startups but teaches enterprise-scale backend systems. Apply directly."},
-  {rank:74,company:"Lenskart",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Lenskart Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://lenskart.com/careers.html",tip:"E-commerce + D2C tech. Your backend stack is relevant. Fast-growing company = high ownership. Apply on LinkedIn. Tier-2 friendly culture. 2 rounds typical."},
-  {rank:75,company:"Magicbricks",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python; Noida",role:"Backend SDE Intern",deadline:"Rolling — Magicbricks / Times Internet Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.timesinternet.in/careers",tip:"PropTech + real estate platform under Times Internet. Backend + search/recommendation systems. Apply via Times Internet careers. Less competition, solid brand."},
-  {rank:76,company:"MobiKwik",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon",role:"Backend SDE Intern",deadline:"Rolling — MobiKwik Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:27,link:"https://www.mobikwik.com/careers",tip:"Wallet + BNPL fintech. Your backend + Python skills match. Mid-sized startup = good learning curve and direct mentorship. Tier-2 friendly. Apply on LinkedIn + careers page."},
-  {rank:77,company:"Myntra (Flipkart)",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python + backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Myntra Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://www.myntra.com/careers",tip:"Fashion e-commerce under Flipkart. High-scale backend + recommendation systems. Qualifying for Flipkart GRiD also puts you on Myntra's radar since they share the hiring funnel. Apply separately too."},
-  {rank:78,company:"Nykaa",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Nykaa Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://careers.nykaa.com/",tip:"Beauty + fashion e-commerce. Backend + data pipelines. Your Python/backend skills match. Listed company = decent brand. Growing tech team = intern roles opening regularly. Apply via LinkedIn."},
-  {rank:79,company:"OLX (OLX Autos India)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/backend; Gurgaon",role:"Backend SDE Intern",deadline:"Rolling — OLX Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.olxgroup.com/careers",tip:"Classifieds + auto-tech. OLX India tech team in Gurgaon. Backend + search systems. Apply via OLX Group global careers page. Less competitive than e-commerce unicorns."},
-  {rank:80,company:"OYO Rooms (OYO Tech)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — OYO Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.oyorooms.com/careers/",tip:"Hospitality-tech. Backend + booking systems. Your backend stack matches. OYO has been restructuring — intern intake varies. Monitor LinkedIn and careers page actively. Good brand + product experience."},
-  {rank:81,company:"Paytm (One97 Communications)",opp:"SDE Intern / Software Developer Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python; Noida/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Paytm Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://paytm.com/careers/",tip:"Payments + fintech at massive scale. Backend + distributed systems. Note: Paytm has undergone leadership changes — verify current intern intake. Your Python/backend + payments domain knowledge is a strong fit. Apply via careers portal."},
-  {rank:82,company:"Pepperfry",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai",role:"Backend SDE Intern",deadline:"Rolling — Pepperfry Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.pepperfry.com/media/html/careers.html",tip:"Furniture e-commerce. Backend + catalog/search systems. Niche domain. Apply via LinkedIn. Less competition from pure CS folks who prefer more glamorous companies. Decent learning environment."},
-  {rank:83,company:"Pharmeasy",opp:"SDE Intern (Backend)",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai",role:"Backend SDE Intern",deadline:"Rolling — Pharmeasy Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://pharmeasy.in/careers",tip:"Health-tech + pharma logistics. Your backend + Python skills fit. Healthcare data systems are interesting engineering problems. Apply via LinkedIn. Note: company has had funding challenges — verify stability before applying."},
-  {rank:84,company:"Porter (Logistics)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Porter Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://porter.in/careers",tip:"Last-mile logistics unicorn. Real-time routing + dispatch systems = interesting backend problems. Your backend + Docker/cloud skills are relevant. Smaller company = high intern ownership. Tier-2 friendly."},
-  {rank:85,company:"Practo",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Practo Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://practo.com/company/careers",tip:"Health-tech SaaS. Backend + health data systems. Your Django/Python background is a strong match for their API-first platform. 2 rounds. Apply via LinkedIn + careers page."},
-  {rank:86,company:"Reddit (India Tech — Bangalore)",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong DSA + distributed systems; Bangalore",role:"SWE Intern",deadline:"Rolling — Reddit Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:12,link:"https://www.redditinc.com/careers",tip:"Reddit has a Bangalore engineering office. Less known = less applicant competition compared to other US cos with India offices. Strong DSA + backend + social platform systems knowledge helps. Apply via Reddit careers."},
-  {rank:87,company:"Samsung PRISM",opp:"PRISM Developer Program (Research Collaboration)",type:"Program",elig:"BTech 2nd–4th year; project-based; mentor-guided; all colleges",role:"Research Developer Fellow",deadline:"Applications Jan–Mar each year; next cycle Jan 2027",urgent:false,status:"Closed",fit:"High",diff:"M",prob:38,link:"https://research.samsung.com/prism",tip:"Your IoT project Bhumicare is a direct fit for Samsung PRISM's embedded + smart systems tracks. This is a structured research program, not a traditional internship, but leads to Samsung referrals and PPOs. One of the highest conversion-to-PPO programs in India. Apply next Jan."},
-  {rank:88,company:"Square / Block (India)",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong DSA + payments knowledge; Bangalore",role:"SWE/Backend Intern",deadline:"Rolling — Block Inc Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:11,link:"https://careers.squareup.com/us/en",tip:"Block Inc (Square + Cash App + Tidal). Payments + fintech. Small India presence but growing. Strong backend + distributed systems prep needed. Apply via Block careers page."},
-  {rank:89,company:"Udaan",opp:"Software Intern (Backend)",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Udaan Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://udaan.com/careers.html",tip:"B2B e-commerce unicorn. Backend + supply chain systems. Your backend skills fit. Less glamorous consumer brand but solid engineering problems and good PPO culture. Apply via LinkedIn."},
-  {rank:90,company:"Unacademy",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Unacademy Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://unacademy.com/careers",tip:"Ed-tech. Video streaming + content delivery + backend. Python heavy. Your backend skills match. Note: ed-tech sector has seen layoffs — verify current internship intake before applying. When open, Tier-2 friendly."},
-  {rank:91,company:"Vedantu",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Vedantu Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://www.vedantu.com/careers",tip:"Ed-tech + live tutoring platform. Backend + real-time video/WebRTC systems. Python + backend is their core stack. Same caveat as Unacademy — verify current hiring health. Good ML application potential in personalized learning."},
-  {rank:92,company:"VMware / Broadcom India",opp:"Member of Technical Staff (MTS) Intern",type:"Direct Internship",elig:"Pre-final BTech CS; systems programming + cloud; Bangalore/Pune",role:"SWE/Systems Intern",deadline:"Rolling — Broadcom Careers (post-acquisition)",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:15,link:"https://careers.broadcom.com/",tip:"VMware was acquired by Broadcom in 2023. Intern programs continue under Broadcom. Cloud + virtualization + Linux is their world — your Linux/shell scripting + AWS knowledge is relevant. Higher bar but stable MNC environment."},
-  {rank:93,company:"Zoomcar",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Zoomcar Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.zoomcar.com/careers",tip:"Self-drive car rental platform. IoT + backend systems (vehicle tracking = IoT adjacent to your Bhumicare work). Python backend. Less competition. Tier-2 friendly. Apply via LinkedIn."},
-  {rank:94,company:"ZS Associates",opp:"Business Technology Solutions Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥8.0; Pune/Delhi",role:"Tech Analyst / SWE Intern",deadline:"Applications open Aug–Oct each year",urgent:false,status:"Closed",fit:"Medium",diff:"H",prob:14,link:"https://www.zs.com/careers",tip:"Pharma + healthcare consulting + tech. Analytical + tech hybrid role. Python + SQL + data skills are valued. High GPA bar (8+). More structured corporate environment. Apply in Aug–Sep 2026."},
-  {rank:95,company:"Airtel (Airtel X Labs)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS/EE; Python/backend; Gurgaon/Bangalore",role:"SWE/Backend Intern",deadline:"Rolling — Airtel Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.airtel.in/airtel-thanks/careers/",tip:"Telecom-tech + 5G + cloud infra. Airtel X Labs is their innovation arm. Your cloud + backend skills are relevant. Less competitive than pure product startups. Good for exposure to telecom-scale infrastructure."},
-  {rank:96,company:"Bajaj Finserv Tech",opp:"Software / IT Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.0; Pune",role:"SWE/IT Intern",deadline:"Rolling — Bajaj Finserv Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.bajajfinserv.in/careers",tip:"NBFC + fintech. Backend + data systems. Stable large-company environment. Less exciting engineering than startups but good resume brand for finance-adjacent roles. Apply directly."},
-  {rank:97,company:"HP India (R&D)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS/EE; Python/C++; Bangalore/Chennai",role:"SWE Intern",deadline:"Rolling — HP Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://jobs.hp.com/",tip:"HP India R&D has a Bangalore office. Software + firmware + cloud. Your backend + Linux skills are relevant. MNC = structured internship experience. Less competition vs pure product companies. Apply via HP Jobs portal."},
-  {rank:98,company:"KPMG India (Tech Consulting)",opp:"Technology Intern / Digital Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.5; multiple cities",role:"Tech Analyst Intern",deadline:"Applications open Sep–Nov each year",urgent:false,status:"Closed",fit:"Medium",diff:"M",prob:20,link:"https://home.kpmg/in/en/home/careers.html",tip:"Big-4 tech consulting. Less pure SWE and more tech advisory/implementation. Good brand name. Your cloud + CI/CD knowledge is relevant for DevOps consulting tracks. Apply in Oct 2026."},
-  {rank:99,company:"PayU (Prosus)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — PayU Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://corporate.payu.com/careers/",tip:"Payments + fintech under Prosus/Naspers. Your backend + payments adjacent knowledge is a strong match. Mid-sized company = good intern ownership. Apply via LinkedIn + PayU careers page."},
-  {rank:100,company:"Urban Company",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Urban Company Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://www.urbancompany.com/careers",tip:"Home services marketplace + on-demand platform. Real-time dispatch + backend systems. Your backend + Docker skills are relevant. Growing tech team. Tier-2 friendly culture. Apply via LinkedIn. Good for distributed systems exposure."},
-];
-
-const typeColors = {
-  "Direct Internship":"b-dir","Hackathon":"b-hack","Coding Challenge":"b-comp",
-  "Fellowship":"b-fel","Program":"b-prog","Open Source":"b-open"
-};
-
-function probColor(p){
-  if(p>=35)return"#3B6D11";
-  if(p>=20)return"#854F0B";
-  return"#A32D2D";
-}
-
-function fitClass(f){
-  return f==="High"?"fit-high":f==="Medium"?"fit-med":"fit-low";
-}
-function diffClass(d){
-  return d==="E"?"diff-e":d==="M"?"diff-m":d==="H"?"diff-h":"diff-vh";
-}
-function diffLabel(d){
-  return d==="E"?"Easy":d==="M"?"Medium":d==="H"?"Hard":"Very Hard";
-}
-
-let sortKey="rank",sortDir=1;
-let expandedRows=new Set();
-
-function render(){
-  const q=document.getElementById("search").value.toLowerCase();
-  const ft=document.getElementById("fType").value;
-  const ff=document.getElementById("fFit").value;
-  const fs=document.getElementById("fStatus").value;
-  const so=document.getElementById("fSort").value;
-
-  let rows=[...DATA].filter(r=>{
-    if(q&&!r.company.toLowerCase().includes(q)&&!r.opp.toLowerCase().includes(q)&&!r.role.toLowerCase().includes(q))return false;
-    if(ft&&!r.type.includes(ft))return false;
-    if(ff&&r.fit!==ff)return false;
-    if(fs&&r.status!==fs)return false;
-    return true;
-  });
-
-  rows.sort((a,b)=>{
-    let av,bv;
-    if(so==="rank"){av=a.rank;bv=b.rank;}
-    else if(so==="prob"){av=-a.prob;bv=-b.prob;}
-    else if(so==="company"){av=a.company;bv=b.company;}
-    else{av=a.deadline;bv=b.deadline;}
-    return av<bv?-1:av>bv?1:0;
-  });
-
-  const tbody=document.getElementById("tbody");
-  tbody.innerHTML="";
-
-  let urgentC=0,highC=0,openC=0;
-  DATA.forEach(r=>{
-    if(r.urgent)urgentC++;
-    if(r.fit==="High")highC++;
-    if(r.status==="Open")openC++;
-  });
-  document.getElementById("sTotal").textContent=DATA.length;
-  document.getElementById("sUrgent").textContent=urgentC;
-  document.getElementById("sHigh").textContent=highC;
-  document.getElementById("sOpen").textContent=openC;
-
-  if(rows.length===0){
-    document.getElementById("noResults").style.display="block";
-    return;
-  }
-  document.getElementById("noResults").style.display="none";
-
-  rows.forEach((r,i)=>{
-    const tr=document.createElement("tr");
-    const tipId="tip-"+r.rank;
-    const tipOpen=expandedRows.has(r.rank);
-    tr.innerHTML=`
-      <td style="color:var(--color-text-tertiary);font-size:11px">${r.rank}</td>
-      <td style="font-weight:500;white-space:nowrap">${r.company}${r.urgent?` <span class="flag-urgent">Urgent</span>`:""}</td>
-      <td style="min-width:140px">${r.opp}</td>
-      <td><span class="badge ${typeColors[r.type]||'b-dir'}">${r.type}</span></td>
-      <td style="font-size:11px;color:var(--color-text-secondary);max-width:160px">${r.elig}</td>
-      <td style="font-size:11px;white-space:nowrap">${r.role}</td>
-      <td style="font-size:11px;white-space:nowrap${r.urgent?";color:#791F1F;font-weight:500":""}">${r.deadline}</td>
-      <td class="${fitClass(r.fit)}">${r.fit}</td>
-      <td class="${diffClass(r.diff)}">${diffLabel(r.diff)}</td>
-      <td>
-        <div class="prob-bar">
-          <div class="prob-track"><div class="prob-fill" style="width:${Math.min(r.prob*2,100)}%;background:${probColor(r.prob)}"></div></div>
-          <span style="font-size:11px;font-weight:500;color:${probColor(r.prob)};min-width:28px">${r.prob}%</span>
-        </div>
-      </td>
-      <td><a class="link-btn" href="${r.link}" target="_blank">Apply <i class="ti ti-external-link" aria-hidden="true" style="font-size:11px"></i></a></td>
-      <td>
-        <div class="note" id="${tipId}" style="${tipOpen?"":"max-height:36px;overflow:hidden"}">
-          ${r.tip}
-        </div>
-        <span class="tip-toggle" onclick="toggleTip(${r.rank})">${tipOpen?"Show less ▲":"Show more ▼"}</span>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function toggleTip(rank){
-  if(expandedRows.has(rank))expandedRows.delete(rank);
-  else expandedRows.add(rank);
-  render();
-}
-
-document.getElementById("search").addEventListener("input",render);
-document.getElementById("fType").addEventListener("change",render);
-document.getElementById("fFit").addEventListener("change",render);
-document.getElementById("fStatus").addEventListener("change",render);
-document.getElementById("fSort").addEventListener("change",render);
-
-render();
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internships</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0;}
+        :root{--bg:#f5f7fb;--card:#ffffff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--primary:#2563eb;--primary-light:#dbeafe;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--shadow:0 10px 30px rgba(0,0,0,0.08);--radius:16px;}
+        body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(to bottom right,#eef4ff,#f8fafc);color:var(--text);padding:32px;line-height:1.6;min-height:100vh;font-size:15px;}
+        body>*{max-width:1400px;margin-left:auto;margin-right:auto;}
+        .hdr{background:rgba(255,255,255,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.4);border-radius:24px;padding:28px;margin-bottom:24px;box-shadow:var(--shadow);}
+        .hdr h1{font-size:32px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:-0.5px;}
+        .hdr p{font-size:15px;color:var(--muted);}
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:24px;}
+        .stat{background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.5);border-radius:20px;padding:24px;text-align:left;box-shadow:var(--shadow);transition:all 0.25s ease;}
+        .stat:hover{transform:translateY(-4px);}
+        .stat-n{font-size:34px;font-weight:700;margin-bottom:6px;color:var(--primary);}
+        .stat-l{font-size:13px;color:var(--muted);font-weight:500;}
+        .controls{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px;padding:20px;background:rgba(255,255,255,0.88);border-radius:20px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.5);}
+        .controls input,.controls select{height:46px;border:1px solid var(--border);border-radius:12px;background:#fff;padding:0 14px;font-size:15px;color:var(--text);transition:all 0.2s ease;outline:none;}
+        .controls input{flex:1;min-width:240px;}
+        .controls input:focus,.controls select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,0.12);}
+        .tbl-wrap{background:rgba(255,255,255,0.9);border-radius:24px;overflow-x:auto;-webkit-overflow-scrolling:touch;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.5);}
+        table{width:100%;border-collapse:separate;border-spacing:0;min-width:1200px;font-size:14px;}
+        thead{position:sticky;top:0;z-index:10;}
+        th{background:#f8fafc;color:#475569;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;padding:18px 16px;border-bottom:1px solid var(--border);white-space:nowrap;}
+        td{padding:18px 16px;border-bottom:1px solid #f1f5f9;vertical-align:top;color:#1e293b;font-size:14px;}
+        tbody tr{transition:all 0.2s ease;}
+        tbody tr:hover{background:#f8fbff;transform:scale(1.001);}
+        .badge{display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.2px;white-space:nowrap;}
+        .b-hack{background:#dcfce7;color:#166534;}
+        .b-dir{background:#dbeafe;color:#1d4ed8;}
+        .b-fel{background:#ede9fe;color:#6d28d9;}
+        .b-prog{background:#fef3c7;color:#92400e;}
+        .b-comp{background:#fee2e2;color:#b91c1c;}
+        .b-open{background:#cffafe;color:#155e75;}
+        .fit-high{color:var(--success);font-weight:700;}
+        .fit-med{color:var(--warning);font-weight:700;}
+        .fit-low{color:var(--danger);font-weight:700;}
+        .diff-e{color:var(--success);font-weight:600;}
+        .diff-m{color:var(--warning);font-weight:600;}
+        .diff-h{color:#ea580c;font-weight:700;}
+        .diff-vh{color:var(--danger);font-weight:700;}
+        .prob-bar{display:flex;align-items:center;gap:10px;}
+        .prob-track{flex:1;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;min-width:90px;}
+        .prob-fill{height:100%;border-radius:999px;transition:width 0.3s ease;}
+        .flag-urgent{display:inline-flex;align-items:center;margin-left:8px;background:#fee2e2;color:#b91c1c;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700;}
+        .link-btn{display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:#fff;text-decoration:none;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:600;transition:all 0.2s ease;box-shadow:0 4px 12px rgba(37,99,235,0.2);}
+        .link-btn:hover{background:#1d4ed8;transform:translateY(-2px);}
+        .note{font-size:12px;line-height:1.6;color:#475569;max-width:280px;}
+        .tip-toggle{display:inline-block;margin-top:8px;font-size:12px;color:var(--primary);font-weight:600;cursor:pointer;transition:opacity 0.2s ease;}
+        .tip-toggle:hover{opacity:0.7;}
+        .no-results{padding:50px;text-align:center;color:var(--muted);font-size:15px;}
+        .sort-arrow{margin-left:4px;opacity:0.5;}
+        div[style*="margin-top:12px"]{margin-top:20px!important;background:rgba(255,255,255,0.85);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow);color:#475569!important;font-size:12px!important;border:1px solid rgba(255,255,255,0.5);}
+        ::-webkit-scrollbar{width:10px;height:10px;}
+        ::-webkit-scrollbar-track{background:#e5e7eb;border-radius:10px;}
+        ::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:10px;}
+        ::-webkit-scrollbar-thumb:hover{background:#64748b;}
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width:768px){
+        body{padding:12px;font-size:25px;line-height:1.7;}
+        .hdr{padding:20px;border-radius:18px;}
+        .hdr h1{font-size:28px;line-height:1.3;}
+        .hdr p{font-size:15px;}
+        .stats{grid-template-columns:1fr 1fr;gap:14px;}
+        .stat{padding:20px;}
+        .stat-n{font-size:30px;}
+        .stat-l{font-size:14px;}
+        .controls{padding:16px;gap:12px;}
+        .controls input,.controls select{width:100%;height:50px;font-size:16px;}
+        .tbl-wrap{border-radius:18px;overflow-x:auto;}
+        table{min-width:950px;font-size:15px;}
+        th{font-size:14px;padding:16px 14px;}
+        td{font-size:15px;padding:16px 14px;line-height:1.6;}
+        .badge{font-size:12px;padding:7px 13px;}
+        .note{font-size:14px;max-width:none;}
+        .link-btn{font-size:14px;padding:11px 15px;}
+        .prob-track{min-width:120px;height:12px;}
+        .tip-toggle{font-size:13px;}
+        .no-results{padding:35px 20px;font-size:16px;}
+        div[style*="margin-top:12px"]{font-size:13px!important;padding:16px;}
+        ::-webkit-scrollbar{height:6px;}
+        }
+        @media (max-width:480px){
+        body{padding:10px;}
+        .hdr h1{font-size:24px;}
+        table{min-width:850px;}
+        th{font-size:13px;}
+        td{font-size:14px;}
+        .controls input,.controls select{font-size:15px;}
+        .link-btn{font-size:13px;width:100%;justify-content:center;}
+        }
+    </style>
+</head>
+<body>
+    <div class="hdr">
+    <h1><i class="ti ti-rocket" aria-hidden="true"></i> Internship Opportunity Tracker: 2027 & 2028 batch (BTech CSE)</h1>
+    <p>Researched pathways across 150+ companies · Ranked by profile fit · Backend / SDE roles</p>
+    </div>
+
+    <div class="stats" id="statBar">
+    <div class="stat"><div class="stat-n" id="sTotal">0</div><div class="stat-l">Total opportunities</div></div>
+    <div class="stat"><div class="stat-n" id="sUrgent">0</div><div class="stat-l">Deadline ≤ July 2026</div></div>
+    <div class="stat"><div class="stat-n" id="sHigh">0</div><div class="stat-l">High fit for your profile</div></div>
+    <div class="stat"><div class="stat-n" id="sOpen">0</div><div class="stat-l">Currently open</div></div>
+    </div>
+
+    <div class="controls">
+    <input type="text" id="search" placeholder="Search company or opportunity..." />
+    <select id="fType">
+        <option value="">All types</option>
+        <option value="Direct Internship">Direct internship</option>
+        <option value="Hackathon">Hackathon → internship</option>
+        <option value="Coding Challenge">Coding challenge</option>
+        <option value="Fellowship">Fellowship</option>
+        <option value="Program">Program</option>
+        <option value="Open Source">Open source</option>
+    </select>
+    <select id="fFit">
+        <option value="">All fit levels</option>
+        <option value="High">High fit</option>
+        <option value="Medium">Medium fit</option>
+        <option value="Low">Low fit</option>
+    </select>
+    <select id="fStatus">
+        <option value="">All statuses</option>
+        <option value="Open">Open / active</option>
+        <option value="Closed">Closed (reopens)</option>
+        <option value="Expected">Expected soon</option>
+    </select>
+    <select id="fSort">
+        <option value="rank">Sort: profile rank</option>
+        <option value="prob">Sort: selection probability</option>
+        <option value="company">Sort: company name</option>
+        <option value="deadline">Sort: deadline</option>
+    </select>
+    </div>
+
+    <div class="tbl-wrap">
+    <table id="mainTable">
+    <thead>
+    <tr>
+    <th>#</th>
+    <th>Company</th>
+    <th>Opportunity</th>
+    <th>Type</th>
+    <th>Eligibility</th>
+    <th>Role</th>
+    <th>Deadline</th>
+    <th>Profile fit</th>
+    <th>Difficulty</th>
+    <th>Selection chance</th>
+    <th>Apply / link</th>
+    <th>Strategy tip</th>
+    </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+    </table>
+    <div class="no-results" id="noResults" style="display:none">No opportunities match your filters.</div>
+    </div>
+
+    <div style="margin-top:12px;font-size:11px;color:var(--color-text-tertiary);line-height:1.6">
+    <strong>Legend:</strong> Difficulty — E: Easy, M: Medium, H: Hard, VH: Very Hard &nbsp;|&nbsp; Probabilities are estimates for a Tier-2 off-campus candidate with strong DSA + projects &nbsp;|&nbsp; Links may open company official portals or reliable aggregators &nbsp;|&nbsp; Data researched May 2026, verify before applying. &nbsp;|&nbsp; For more details contact <a href="https://vivekrs.in">the developer.</a>
+    </div>
+
+    <script>
+    const DATA = [
+    {rank:1,company:"Flipkart",opp:"GRiD 8.0 (2026 edition)",type:"Hackathon",elig:"2027/2028 batch BTech/MTech, any college",role:"SDE Intern → SDE-1",deadline:"Expected Jul 2026",urgent:false,status:"Expected",fit:"High",diff:"M",prob:35,link:"https://unstop.com/hackathons/flipkart-grid",tip:"3rd-year students get summer internship interviews after qualifying rounds. Start DSA prep now — Round 2 is pure coding. GRiD alumni say the profile shortlisting round (Round 1) favors hackathon wins and projects. Strong resume alone clears it."},
+    {rank:2,company:"Adobe",opp:"India Hackathon 2026",type:"Hackathon",elig:"2027–2029 batch, teams of 2–3 from same college",role:"SDE/Research Intern (₹1L/mo stipend)",deadline:"Expected Jun–Jul 2026",urgent:true,status:"Expected",fit:"High",diff:"M",prob:30,link:"https://unstop.com/hackathons/adobe-india-hackathon",tip:"Only 2027 batch eligible for PPIs. 4 rounds: MCQ+DSA, prototype build, product round, live finale at Adobe Noida. Form a strong team — team avg score decides shortlisting. Focus on document AI / intelligent PDF problems from past editions."},
+    {rank:3,company:"Goldman Sachs",opp:"India Hackathon 2026 (GSIH)",type:"Hackathon",elig:"2027/2028 batch, select colleges (IITs/NITs/BITS + others)",role:"SDE/Quant Intern via PPI",deadline:"May 2026 (registration closed, next edition ~Apr 2027)",urgent:false,status:"Closed",fit:"High",diff:"H",prob:18,link:"https://www.goldmansachs.com/careers/students/programs-and-internships/india/hackathon",tip:"12-hour coding marathon on HackerRank. CS + Quant tracks. Top finalists get PPI. Even reaching top-500 looks stellar on resume. Tier-2 colleges are on the eligible list — verify your college. Prep: competitive programming, financial algorithms."},
+    {rank:4,company:"Amazon",opp:"SDE Intern (Summer/6-month)",type:"Direct Internship",elig:"2027 batch BTech/MTech, CS/IT; no active backlogs",role:"SDE-1 Intern",deadline:"Rolling — apply immediately on Amazon Jobs",urgent:true,status:"Open",fit:"High",diff:"H",prob:12,link:"https://www.amazon.jobs/en/job_categories/software-development",tip:"Apply directly on Amazon Jobs. Off-campus applications accepted — no college filter. Coding assessment sent to all applicants. OA has 2 DSA problems (1h). Then 2–3 tech interviews + 1 behavioral (Leadership Principles). 200+ LeetCode and strong DSA is your exact target. AWS exposure is a big plus for you."},
+    {rank:5,company:"Walmart Global Tech",opp:"Sparkplug Summer Internship",type:"Coding Challenge",elig:"3rd-year BTech from 24 select colleges; CGPA ≥7.0; no backlogs",role:"Software Engineering Intern (₹1L/mo)",deadline:"Nov 2025 (closed) → Nov 2026 expected",urgent:false,status:"Closed",fit:"High",diff:"H",prob:15,link:"https://unstop.com/internships/sparkplug-summer-internship-walmart-global-tech-india",tip:"ITER SOA is unlikely on the 24-college list — check Unstop each Nov for the updated list. If eligible: MCQ + 2 hard DSA problems (90 mins). AI/ML + scalable systems focus matches your learning trajectory perfectly."},
+    {rank:6,company:"Microsoft",opp:"Software Engineer Intern (Bangalore)",type:"Direct Internship",elig:"Final/pre-final year BTech/MTech CS/IT; graduating 2027",role:"SWE Intern",deadline:"Rolling — apply via Microsoft Careers",urgent:false,status:"Open",fit:"High",diff:"VH",prob:8,link:"https://careers.microsoft.com/v2/global/en/jobs",tip:"Mostly campus-driven but off-campus via LinkedIn/careers portal works if resume is exceptional. Strong GitHub, open-source contributions, and system design knowledge help. FAANG-level DSA required. Focus on getting a referral via LinkedIn outreach."},
+    {rank:7,company:"Razorpay",opp:"SDE Intern (Backend Engineering)",type:"Direct Internship",elig:"Pre-final/final year BTech; open to all colleges",role:"Backend SDE Intern",deadline:"Rolling — Razorpay Careers",urgent:true,status:"Open",fit:"High",diff:"M",prob:28,link:"https://razorpay.com/jobs/",tip:"Django + backend skills match Razorpay stack (Python/Go). Apply directly on careers page. Resume shortlist → DSA test → 2 tech interviews. Referrals from LinkedIn employees significantly boost shortlisting odds. Apply now — rolling basis."},
+    {rank:8,company:"Meesho",opp:"SDE Intern (Backend)",type:"Direct Internship",elig:"Pre-final year BTech, any college; strong DSA",role:"Backend SDE Intern",deadline:"Rolling — Meesho careers",urgent:true,status:"Open",fit:"High",diff:"M",prob:25,link:"https://meesho.io/jobs",tip:"Meesho explicitly values skills over college pedigree — their SDE intern JD says 'no matter which college or branch'. Django/Python + DSA is a perfect match. Stipend ₹35K/mo historically. Short 6-month internship with strong PPO conversion."},
+    {rank:9,company:"Zomato",opp:"SDE Intern (2027 batch)",type:"Direct Internship",elig:"2027 batch only; BTech CS/related; Bangalore on-site",role:"SDE Intern → FTE on performance",deadline:"Rolling — check Zomato careers July 2026",urgent:false,status:"Expected",fit:"High",diff:"M",prob:22,link:"https://www.zomato.com/careers",tip:"₹1L/mo stipend. 6-month internship starting Aug/July. Strong conversion to FTE. Past interns say 2 DSA rounds + 1 system design + HM round. Backend + distributed systems knowledge is key."},
+    {rank:10,company:"PhonePe",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final year BTech; CS/IT; open hiring",role:"Backend SDE Intern",deadline:"Rolling — PhonePe Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://careers.phonepe.com/",tip:"Fintech backend role — Java/Go preferred but Python accepted. Strong system design + DSA. Apply directly, no campus filter. PhonePe pays top startup-level stipend (₹60K–80K range reported). Prep: distributed systems, payment systems basics."},
+    {rank:11,company:"Groww",opp:"IT Audit / SDE Intern",type:"Direct Internship",elig:"BTech students, all years; Bangalore",role:"SDE Intern / Analyst Intern",deadline:"Rolling — Groww careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://groww.in/careers",tip:"Fintech startup, values problem-solving. Apply directly. Python/Django background is a direct match for their data-driven backend. LinkedIn outreach to Groww engineers for referrals is highly effective."},
+    {rank:12,company:"Swiggy",opp:"SDE Intern / ASDE",type:"Direct Internship",elig:"2027 batch BTech; CS/IT/related; ML + backend skills valued",role:"SDE Intern / Associate SDE",deadline:"Rolling — Swiggy Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:22,link:"https://careers.swiggy.com/",tip:"Tech-first company; ML + backend = perfect match. Off-campus drive happens periodically. Monitor Swiggy Careers + LinkedIn. Fast-paced engineering culture; Docker/CI-CD experience is a differentiator."},
+    {rank:13,company:"SAP Labs",opp:"Student Intern (Software Engineering)",type:"Direct Internship",elig:"Pre-final year BTech CS/IT; CGPA ≥7.0; Bangalore/Pune/Gurgaon",role:"SWE Intern",deadline:"Rolling — SAP Careers India",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://jobs.sap.com/",tip:"SAP accepts interns from Tier-2 colleges. Strong Java + cloud (AWS) + backend = great fit. Apply on SAP Careers with 'intern' filter + India location. Lower competition than FAANG. 6-month paid internship with strong structure."},
+    {rank:14,company:"Salesforce",opp:"Intern Software Engineer (Hyderabad/Bangalore)",type:"Direct Internship",elig:"Pre-final BTech CS/related; 2027 batch",role:"SWE Intern",deadline:"Rolling — Salesforce Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:15,link:"https://www.salesforce.com/company/careers/",tip:"Cloud-focused company; AWS + Docker knowledge is directly relevant. Off-campus applications accepted. OA + 3–4 interview rounds. Salesforce values leadership/PoR experience — your club leadership is a plus."},
+    {rank:15,company:"Cisco",opp:"Software Engineer Trainee / Virtual Intern (AICTE)",type:"Program",elig:"BTech all years; Virtual track open to all via AICTE portal",role:"SWE Intern / Trainee",deadline:"Rolling — AICTE portal + Cisco Careers",urgent:true,status:"Open",fit:"High",diff:"M",prob:32,link:"https://aicte-internship.eduskills.academy/",tip:"Two tracks: (1) AICTE virtual internship — 50K free slots, certificate, easy to get. (2) Full Cisco internship via careers portal (harder). The AICTE track adds a credible cert to your resume with minimal effort. Do it while gunning for the real one."},
+    {rank:16,company:"Uber",opp:"Software Engineer I / Intern",type:"Direct Internship",elig:"2027 batch BTech; strong DSA + systems knowledge",role:"SWE/Backend Intern",deadline:"Rolling — Uber Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:12,link:"https://www.uber.com/in/en/careers/",tip:"Uber India (Bangalore) hires aggressively. Backend + distributed systems focus. Higher bar than most Indian startups. Your Docker/CI-CD/AWS combo is a differentiator. OA → 2 tech rounds → system design."},
+    {rank:17,company:"Nvidia",opp:"Software Engineering Intern (India)",type:"Direct Internship",elig:"Pre-final/final BTech CS/EE; strong C++/Python + ML",role:"SWE Intern / ML Intern",deadline:"Rolling — Nvidia Careers",urgent:false,status:"Open",fit:"Medium",diff:"VH",prob:8,link:"https://www.nvidia.com/en-in/about-nvidia/careers/",tip:"Extremely competitive. Your ML learning + Python skills are relevant. Prep heavily on GPU computing basics, CUDA concepts (not required but impressive), and standard SWE rounds. Tier-2 candidates have gotten in with exceptional projects."},
+    {rank:18,company:"Postman",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final year BTech; API/backend knowledge",role:"Backend SDE Intern",deadline:"Rolling — Postman Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://www.postman.com/company/careers/",tip:"API-first company; your backend + REST experience is a perfect cultural fit. Smaller company = less competition. Apply directly on careers page + LinkedIn. Show API-heavy projects in your resume."},
+    {rank:19,company:"Intuit",opp:"Software Engineer Intern (Bangalore)",type:"Direct Internship",elig:"Pre-final BTech CS/related; 2027 batch",role:"SWE/Backend Intern",deadline:"Rolling — Intuit Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:16,link:"https://careers.intuit.com/",tip:"Fintech-adjacent; backend + cloud is valued. Less cutthroat than pure FAANG. 2–3 interview rounds. Company culture matches your PoR/leadership experience well."},
+    {rank:20,company:"Dell Technologies",opp:"Software Intern (Intern Req)",type:"Direct Internship",elig:"BTech pre-final; CS/IT; Hyderabad/Bangalore",role:"SWE Intern",deadline:"Rolling — Dell Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://jobs.dell.com/",tip:"Dell India actively hires Tier-2 off-campus interns. Lower DSA bar than product startups but needs strong fundamentals. Cloud + Linux shell experience = direct match. Good entry point; PPO conversion happens."},
+    {rank:21,company:"Intel",opp:"Graduate Intern / Software Intern",type:"Direct Internship",elig:"Pre-final/final BTech CS/EE; CGPA ≥7.5",role:"SWE/Systems Intern",deadline:"Rolling — Intel Careers India",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:15,link:"https://jobs.intel.com/",tip:"Intel India (Bangalore/Hyderabad) hires software interns. Systems + OS knowledge valued. Your Linux + shell scripting experience is a plus. Lower software-only DSA bar; more emphasis on CS fundamentals."},
+    {rank:22,company:"Qualcomm",opp:"Interim Engineering Intern",type:"Direct Internship",elig:"Pre-final BTech CS/EE; C++/Python; Hyderabad/Bangalore",role:"SWE Intern",deadline:"Rolling — Qualcomm Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:14,link:"https://careers.qualcomm.com/careers",tip:"Embedded + systems focus but software tracks exist. Prep OS/networking fundamentals. Your CI/CD + Linux knowledge is relevant. Less competition from pure software CS folks who skip hardware companies."},
+    {rank:23,company:"SAP / Ariba",opp:"Working Student / Intern Program",type:"Direct Internship",elig:"Pre-final year; any college; CGPA 7+",role:"Backend SWE Intern",deadline:"Rolling — SAP Jobs portal",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://jobs.sap.com/",tip:"SAP Labs Bangalore and Pune consistently hire interns. The intern application is often listed as 'Working Student' or 'Student Intern'. Java + cloud background is highly valued. Lower competition vs pure product companies."},
+    {rank:24,company:"NetApp",opp:"Software Engineering Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong Python/Java + storage basics",role:"SWE Intern",deadline:"Rolling — NetApp Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://careers.netapp.com/",tip:"NetApp India (Bangalore/Pune) regularly posts intern roles. Cloud storage + distributed systems = relevant. Less brand recognition = less competition. Good PPO track record."},
+    {rank:25,company:"Mastercard",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS/IT; CGPA ≥7.0; Pune/Vadodara",role:"SWE/Backend Intern",deadline:"Rolling — Mastercard Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://careers.mastercard.com/",tip:"Fintech + payments domain = direct match with your interests and Razorpay-adjacent knowledge. Strong backend + DSA needed. Mastercard India hires from Tier-2 colleges via off-campus. Apply directly."},
+    {rank:26,company:"PayPal",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS/related; Chennai/Bangalore",role:"SWE/Backend Intern",deadline:"Rolling — PayPal Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:16,link:"https://careers.pypl.com/home/",tip:"Payments + backend = your zone. PayPal India hires off-campus. Apply via careers portal. Strong DSA + system design prep needed. OA → 2–3 tech rounds."},
+    {rank:27,company:"Morgan Stanley",opp:"Technology Summer Analyst (Intern) — India",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥8.0 preferred; Mumbai/Bangalore",role:"Technology Analyst Intern",deadline:"Applications open Oct–Dec each year",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:10,link:"https://morganstanley.com/campus/india",tip:"Finance-technology hybrid role. Very high bar — IIT/NIT heavy but exceptional Tier-2 candidates with strong projects have broken through. Apply in Oct–Nov 2026. Focus on core CS fundamentals + behavioral prep."},
+    {rank:28,company:"JPMorgan Chase",opp:"Software Engineer Intern (India)",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.5; all colleges",role:"SWE Intern",deadline:"Applications open Sep–Nov each year",urgent:false,status:"Closed",fit:"Medium",diff:"H",prob:14,link:"https://jpmc.fa.oraclecloud.com/",tip:"JPMC India (Hyderabad/Bangalore/Mumbai) hires off-campus via careers portal. Code for Good hackathon is an alternate entry. Apply in Oct 2026. Decent conversion from Tier-2 colleges."},
+    {rank:29,company:"JPMC Code for Good",opp:"Code for Good Hackathon",type:"Hackathon",elig:"BTech any year; all colleges eligible; teams",role:"SWE/Data track → internship interview",deadline:"Applications Sep–Oct each year",urgent:false,status:"Expected",fit:"High",diff:"M",prob:30,link:"https://careers.jpmorgan.com/global/en/students/programs/code-for-good",tip:"24-hour hackathon building solutions for NGOs. Top performers get fast-tracked for internship interviews. Tier-2 friendly. Social impact angle + your hackathon experience is a strong differentiator. Prep for both technical and communication rounds."},
+    {rank:30,company:"Dunzo",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend knowledge; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Dunzo Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://www.dunzo.com/",tip:"High-growth startup. Your Django + Docker skill is their exact stack. Less competitive than big tech. Apply on LinkedIn/careers page. Good PPO potential."},
+    {rank:31,company:"Upstox",opp:"SDE Backend Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Go/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Upstox Jobs",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://upstox.com/company/careers/",tip:"Fintech + trading platform. Backend + Python = strong match. Less known = less competition. Apply on LinkedIn. 2 rounds: DSA + system design basics. Stipend ~₹35–50K."},
+    {rank:32,company:"CoinDCX",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Node/Go knowledge",role:"Backend SDE Intern",deadline:"Rolling — CoinDCX Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:25,link:"https://coindcx.com/careers/",tip:"Crypto + fintech. Your backend skills match. Smaller company = more ownership from day one. Good for building portfolio. Apply directly or via LinkedIn."},
+    {rank:33,company:"Zerodha",opp:"Software Intern (Rare openings)",type:"Direct Internship",elig:"Pre-final BTech; exceptional Python/Go skills",role:"Backend Developer Intern",deadline:"Very rare — monitor Zerodha GitHub + Twitter",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:5,link:"https://zerodha.com/careers/",tip:"Zerodha barely advertises. They hire through GitHub contributions + cold outreach. Follow @zerodhaonline on Twitter. Contribute to Kite Connect API open-source projects. A PR merged into their repo is worth 10 applications."},
+    {rank:34,company:"CRED",opp:"SDE Intern (when open)",type:"Direct Internship",elig:"Pre-final BTech; exceptional DSA; Bangalore",role:"Backend SDE Intern",deadline:"Rare openings — monitor CRED Careers + LinkedIn",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:8,link:"https://careers.cred.club/",tip:"Very selective. Pay is top-of-market but interviews are grueling (4+ rounds, hard DSA + system design). Keep as an aspirational target. Apply once LeetCode 300+ hard problems solved."},
+    {rank:35,company:"Rippling",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech; strong DSA + distributed systems",role:"SWE/Backend Intern",deadline:"Rolling — Rippling Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:12,link:"https://www.rippling.com/careers",tip:"US-based but Bangalore office hires. HR-tech + backend. Strong DSA + good projects needed. Less competitive than FAANG in India. Good resume + referral via LinkedIn outreach."},
+    {rank:36,company:"Rubrik",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech; CS fundamentals + cloud knowledge",role:"SWE Intern",deadline:"Rolling — Rubrik Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:14,link:"https://www.rubrik.com/company/careers",tip:"Cloud data management. Less well-known = less competition. AWS + distributed systems knowledge is a direct fit. 2–3 rounds."},
+    {rank:37,company:"Freshworks",opp:"Software Engineer Intern (Chennai/Bangalore)",type:"Direct Internship",elig:"Pre-final BTech; any college; CGPA ≥7.0",role:"SWE Intern",deadline:"Rolling — Freshworks Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://careers.freshworks.com/",tip:"SaaS company, very Tier-2 friendly historically. Python/Django is their core stack — perfect match. Apply directly. 2 rounds: DSA + cultural. Strong PPO conversion rate. Chennai HQ = good for South India candidates."},
+    {rank:38,company:"Zoho",opp:"Software Intern (Project-based)",type:"Direct Internship",elig:"BTech pre-final; CGPA ≥6.5; Chennai primarily",role:"SWE Intern",deadline:"Rolling — Zoho Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:32,link:"https://careers.zohocorp.com/",tip:"Tier-2 college friendly. Zoho values coding skills over pedigree. Written test → coding test → interview. Good learning environment. Not the highest stipend but great for product experience."},
+    {rank:39,company:"Ola / OLA Electric",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; backend/Python/Java",role:"Backend SDE Intern",deadline:"Rolling — Ola Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.olacabs.com/corporate/jobs",tip:"Mobility tech + EV software. Your backend + ML learning is relevant. Apply on LinkedIn. 2 rounds typical. Good for product + distributed systems experience."},
+    {rank:40,company:"ShareChat / Moj",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; strong DSA; Bangalore",role:"Backend/ML SDE Intern",deadline:"Rolling — ShareChat Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://sharechat.com/careers",tip:"Social media + vernacular tech. ML + backend = strong fit. 35–50 LPA range for FTE suggests competitive intern process. Your ML learning is timely."},
+    {rank:41,company:"Samsung R&D India",opp:"PRISM Developer Program",type:"Program",elig:"BTech 2nd–4th year; project collaboration with Samsung mentors",role:"Research Intern / Developer Fellow",deadline:"Applications Jan–Mar each year",urgent:false,status:"Closed",fit:"Medium",diff:"M",prob:35,link:"https://research.samsung.com/prism",tip:"Samsung PRISM is a structured research collaboration program — not a traditional internship but leads to PPO/referrals. Next cycle Jan 2027. Your IoT/embedded (Bhumicare) background + ML interests make this a strong fit. Apply early."},
+    {rank:42,company:"Google",opp:"STEP Intern (Software Training in Engineering Program)",type:"Program",elig:"2nd-year BTech (3rd year after summer 2026 = too late); underrepresented groups; Bangalore",role:"SWE Intern (structured learning track)",deadline:"Rolling — Google Careers India",urgent:false,status:"Closed",fit:"Medium",diff:"H",prob:10,link:"https://careers.google.com/jobs/results/?jex=Entry+Level&jlo=en_US&q=STEP%20intern%20india",tip:"STEP is designed for early-year students. By 3rd year you should apply for standard Google SWE Intern instead. Apply via Google Careers with 'intern' filter. Bar is very high — needs competitive programming + system design."},
+    {rank:43,company:"LinkedIn",opp:"REACH Fellowship / SWE Intern",type:"Fellowship",elig:"Pre-final BTech; underrepresented groups; strong DSA",role:"SWE Intern",deadline:"Rolling — LinkedIn Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:10,link:"https://careers.linkedin.com/reach",tip:"REACH fellowship has DEI criteria. Standard SWE intern track also open. LinkedIn India (Bangalore) hires. Apply via careers + get a referral if possible."},
+    {rank:44,company:"InMobi",opp:"SDE Intern (Mobile/Backend)",type:"Direct Internship",elig:"Pre-final BTech CS; Bangalore",role:"SDE Intern",deadline:"Rolling — InMobi Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.inmobi.com/company/careers/",tip:"AdTech + ML company. Your ML learning + backend is relevant. Apply directly. 2–3 rounds. Tier-2 friendly culture."},
+    {rank:45,company:"Zeta (Directi)",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; strong DSA; any college",role:"Backend SDE Intern",deadline:"Rolling — Zeta Tech Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.zeta.tech/in/careers/",tip:"Fintech + banking-tech. DSA + backend = direct match. Less competition than unicorns. Apply on LinkedIn."},
+    {rank:46,company:"Naukri / InfoEdge",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python; Noida/Delhi",role:"Backend SDE Intern",deadline:"Rolling — InfoEdge Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:28,link:"https://careers.infoedge.in/",tip:"Stable product company. Good for learning product engineering. Apply on Naukri own portal. Less glamorous but solid resume addition."},
+    {rank:47,company:"BigBasket / Tata Digital",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — careers portal",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.bigbasket.com/careers/",tip:"E-commerce + quick commerce. Your Django/Python is their stack. Tata Digital umbrella = stable, good brand. Apply directly."},
+    {rank:48,company:"MakeMyTrip",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; backend/Java/Python",role:"Backend SDE Intern",deadline:"Rolling — MMT Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://careers.makemytrip.com/",tip:"Travel tech + backend systems. Apply directly. 2 rounds typical. Good brand + PPO potential."},
+    {rank:49,company:"Stripe",opp:"Software Engineer Intern (India — rare)",type:"Direct Internship",elig:"Pre-final BTech; exceptional DSA + distributed systems",role:"SWE Intern",deadline:"Rolling — Stripe Careers (monitor)",urgent:false,status:"Expected",fit:"Medium",diff:"VH",prob:6,link:"https://stripe.com/jobs",tip:"Stripe India office (Bangalore) occasionally posts intern roles. Very high bar — on par with Google. Keep as stretch goal. Stipend is exceptional (₹1.5L+/mo range)."},
+    {rank:50,company:"Hackathon ecosystem",opp:"Devfolio / Unstop / MLH hackathons",type:"Hackathon",elig:"All BTech students; open registration",role:"Portfolio builder + startup internship leads",deadline:"Multiple per month — ongoing",urgent:true,status:"Open",fit:"High",diff:"E",prob:60,link:"https://devfolio.co/hackathons",tip:"Win top 3 at any major Devfolio hackathon and startups directly recruit from the leaderboard. Your blood donor app (hackathon project) is portfolio-ready. Enter 2–3 hackathons per month. MLH Fellowship is also a strong open-source pathway."},
+    {rank:51,company:"1MG (Tata Health)",opp:"SDE Intern / Backend Intern",type:"Direct Internship",elig:"Pre-final BTech CS/IT; Python/Java; Gurugram/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — 1mg Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://www.1mg.com/careers",tip:"Health-tech + backend stack. Your Django/Python is a direct match. Tata Digital umbrella gives stability. Less competition than pure fintech unicorns. Apply via LinkedIn or 1mg careers page. 2 rounds typical: DSA + system design basics."},
+    {rank:52,company:"Analytics Vidhya",opp:"Data Science / ML Intern",type:"Direct Internship",elig:"BTech pre-final; Python + ML fundamentals; remote/Delhi",role:"ML/Data Intern",deadline:"Rolling — AV Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:35,link:"https://www.analyticsvidhya.com/careers/",tip:"Your ML learning + Python background is tailor-made here. AV regularly recruits interns to contribute to content, tools, and internal ML pipelines. Less pay but enormous ML learning curve. Great resume line for AI/ML path."},
+    {rank:53,company:"Axis Bank Tech",opp:"Software Intern (Axis Bank IT Division)",type:"Direct Internship",elig:"Pre-final BTech CS/IT; CGPA ≥7.0; Mumbai/Pune",role:"SWE Intern",deadline:"Rolling — Axis Bank Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.axisbank.com/careers",tip:"Banking-tech internships are less competitive than product startups. Good for exposure to large-scale financial systems. Backend + CI/CD knowledge valued. Apply directly; process involves aptitude + tech rounds."},
+    {rank:54,company:"BigBasket",opp:"Software Engineering Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — BigBasket Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:27,link:"https://www.bigbasket.com/careers/",tip:"Quick-commerce + supply chain tech. Django/Python is core to their stack. Tata ownership adds brand value. Apply directly or via LinkedIn. 2 interview rounds. Good PPO conversion for strong performers."},
+    {rank:55,company:"BlackRock",opp:"Technology Analyst Summer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥8.0; Mumbai/Gurgaon",role:"Technology Analyst Intern",deadline:"Applications open Sep–Nov each year",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:8,link:"https://careers.blackrock.com/",tip:"Asset management + fintech. Very high academic bar; IIT/NIT heavy. Off-campus applications accepted but shortlisting is competitive. Apply in Oct 2026. Prep: DSA + SQL + financial systems basics. Strong PoR experience helps in HR rounds."},
+    {rank:56,company:"Bloomberg",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong C++/Python; Mumbai",role:"SWE Intern",deadline:"Rolling — Bloomberg Careers",urgent:false,status:"Open",fit:"Medium",diff:"VH",prob:7,link:"https://careers.bloomberg.com/job/search?el=intern",tip:"One of the highest-paying intern roles in India (₹1.5L+/mo). Extremely competitive. C++ proficiency is near-mandatory. Off-campus via careers portal. Stretch goal — apply after polishing DSA to LC hard level consistently."},
+    {rank:57,company:"BookMyShow",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python + backend; Mumbai",role:"Backend SDE Intern",deadline:"Rolling — BMS Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://in.bookmyshow.com/careers",tip:"Event-tech + ticketing platform. Backend + distributed systems (high-concurrency ticketing) is their core problem. Your backend stack fits well. Apply via LinkedIn. 2–3 rounds."},
+    {rank:58,company:"ClearTax",opp:"SDE Intern (Backend)",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — ClearTax Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://cleartax.in/s/careers",tip:"Tax-tech + fintech. Python-heavy backend. Your Django expertise is a direct match. Smaller team = more ownership. Good for learning product engineering end-to-end. Apply on LinkedIn + careers page."},
+    {rank:59,company:"Cure.fit / Cult.fit",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Cult.fit Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://www.cult.fit/cult.fit/careers",tip:"Health + fitness tech. Python backend + data pipelines. Your ML learning is a bonus here — they use ML for health recommendations. Lean startup culture = high ownership for interns."},
+    {rank:60,company:"DE Shaw",opp:"Software Developer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; exceptional DSA + math; Hyderabad",role:"SWE/Quant Dev Intern",deadline:"Applications open Aug–Oct each year",urgent:false,status:"Closed",fit:"Medium",diff:"VH",prob:7,link:"https://www.deshawindia.com/careers.shtml",tip:"Quant hedge fund + tech. Very high bar — competitive programming level DSA required. Written test is notoriously difficult. Apply in Sep 2026. Even clearing the first round is a strong resume signal. Keep as a stretch goal."},
+    {rank:61,company:"Delhivery",opp:"Software Intern (Backend/Data)",type:"Direct Internship",elig:"Pre-final BTech CS/IT; Python/Java; Gurgaon/Bangalore",role:"Backend/Data Intern",deadline:"Rolling — Delhivery Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://www.delhivery.com/careers/",tip:"Logistics-tech unicorn. Real-time tracking + distributed backend = interesting problems. Your backend + cloud skills match. Less glamorous than consumer apps but solid engineering exposure. Apply on LinkedIn."},
+    {rank:62,company:"FinBox",opp:"Backend SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Go/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — FinBox Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:30,link:"https://finbox.in/careers",tip:"B2B fintech + credit infra. Small team = direct mentorship from senior engineers. Python + backend is their exact stack. High ownership from day one. Apply via LinkedIn — they hire from all colleges."},
+    {rank:63,company:"Freecharge (Axis Bank)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai",role:"SWE Intern",deadline:"Rolling — Axis Bank / Freecharge Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.axisbank.com/careers",tip:"Payments + wallet tech under Axis Bank. Backend skills relevant. Moderate competition. Apply via Axis Bank careers portal since Freecharge is now integrated."},
+    {rank:64,company:"Gojek / GoTo (India office)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS; distributed systems knowledge; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — GoTo Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:15,link:"https://www.gojek.com/en-id/about/careers/",tip:"Super-app + mobility tech. Strong distributed systems + backend focus. Indonesian company with Bangalore office. Less crowded than Indian unicorns. Apply via LinkedIn + careers page."},
+    {rank:65,company:"GitHub (Microsoft India)",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech; strong open-source contributions; remote/Bangalore",role:"SWE Intern",deadline:"Rolling — GitHub Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:14,link:"https://github.com/about/careers",tip:"GitHub is part of Microsoft. Your best hook here is open-source activity — active public repos, merged PRs on popular projects, and a well-maintained GitHub profile. They hire devs who live on GitHub. Build in public actively."},
+    {rank:66,company:"Grab (India Tech Centre)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; distributed systems + backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Grab Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:13,link:"https://grab.careers/",tip:"Southeast Asian super-app with Bangalore tech centre. Competitive but less so than pure Indian unicorns. Strong backend + real-time systems knowledge valued. Apply via Grab careers portal."},
+    {rank:67,company:"Blinkit (Zomato)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Blinkit/Zomato Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://blinkit.com/careers.html",tip:"Quick-commerce + real-time logistics. Your backend skills = direct match. Under Zomato umbrella — apply via Zomato careers page too. High-velocity engineering environment. Good PPO potential."},
+    {rank:68,company:"HackerRank",opp:"Software / Product Intern",type:"Direct Internship",elig:"Pre-final BTech; strong competitive programming + backend",role:"SWE Intern",deadline:"Rolling — HackerRank Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.hackerrank.com/careers",tip:"Ironic but true — HackerRank hires via their own platform. Your 200+ LeetCode and competitive programming background is literally their product use-case. Show your HackerRank profile prominently. US-based but remote/India roles exist."},
+    {rank:69,company:"HDFC Bank Tech",opp:"IT Intern / Graduate Trainee",type:"Direct Internship",elig:"BTech pre-final; CS/IT; CGPA ≥7.0; Mumbai/Pune/Bangalore",role:"IT/SWE Intern",deadline:"Rolling — HDFC Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:20,link:"https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?folderPath=/footer/careers&fileName=careers.html",tip:"Banking-tech. Stable but less cutting-edge engineering. Good for resume diversity. Backend + cloud skills applicable. HDFC tech division (HDFC ErGo, HDFC Life tech) has separate intern tracks — explore all sub-entities."},
+    {rank:70,company:"ICICI Bank Tech / iWork",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; CS/IT; CGPA ≥7.0",role:"IT/SWE Intern",deadline:"Rolling — ICICI Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:20,link:"https://www.icicicareers.com/",tip:"Large banking IT division. Less competitive than fintech startups. Good for exposure to large-scale enterprise systems. Apply directly. Aptitude + tech screening."},
+    {rank:71,company:"Indeed (India office)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS; Hyderabad; strong DSA",role:"SWE/Backend Intern",deadline:"Rolling — Indeed Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:14,link:"https://www.indeed.com/cmp/Indeed/jobs",tip:"Job-search platform with Hyderabad tech office. Product engineering + backend. Competitive but less known to most Indian students = lower applicant volume. Apply via Indeed's own job board (meta move)."},
+    {rank:72,company:"Instamojo",opp:"Backend SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Django; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Instamojo Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:32,link:"https://www.instamojo.com/careers/",tip:"SME payments platform. Django is literally their primary framework — your skill is a direct bullseye. Small team = immediate meaningful contribution. Very accessible to Tier-2 off-campus candidates. Apply now."},
+    {rank:73,company:"Kotak Mahindra Bank Tech",opp:"IT Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.0; Mumbai",role:"IT/SWE Intern",deadline:"Rolling — Kotak Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:20,link:"https://www.kotak.com/en/careers.html",tip:"Banking-tech. Stable internship environment. Less innovative than fintech startups but teaches enterprise-scale backend systems. Apply directly."},
+    {rank:74,company:"Lenskart",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Lenskart Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://lenskart.com/careers.html",tip:"E-commerce + D2C tech. Your backend stack is relevant. Fast-growing company = high ownership. Apply on LinkedIn. Tier-2 friendly culture. 2 rounds typical."},
+    {rank:75,company:"Magicbricks",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python; Noida",role:"Backend SDE Intern",deadline:"Rolling — Magicbricks / Times Internet Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.timesinternet.in/careers",tip:"PropTech + real estate platform under Times Internet. Backend + search/recommendation systems. Apply via Times Internet careers. Less competition, solid brand."},
+    {rank:76,company:"MobiKwik",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon",role:"Backend SDE Intern",deadline:"Rolling — MobiKwik Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:27,link:"https://www.mobikwik.com/careers",tip:"Wallet + BNPL fintech. Your backend + Python skills match. Mid-sized startup = good learning curve and direct mentorship. Tier-2 friendly. Apply on LinkedIn + careers page."},
+    {rank:77,company:"Myntra (Flipkart)",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python + backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Myntra Careers",urgent:false,status:"Open",fit:"High",diff:"H",prob:18,link:"https://www.myntra.com/careers",tip:"Fashion e-commerce under Flipkart. High-scale backend + recommendation systems. Qualifying for Flipkart GRiD also puts you on Myntra's radar since they share the hiring funnel. Apply separately too."},
+    {rank:78,company:"Nykaa",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Nykaa Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://careers.nykaa.com/",tip:"Beauty + fashion e-commerce. Backend + data pipelines. Your Python/backend skills match. Listed company = decent brand. Growing tech team = intern roles opening regularly. Apply via LinkedIn."},
+    {rank:79,company:"OLX (OLX Autos India)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/backend; Gurgaon",role:"Backend SDE Intern",deadline:"Rolling — OLX Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.olxgroup.com/careers",tip:"Classifieds + auto-tech. OLX India tech team in Gurgaon. Backend + search systems. Apply via OLX Group global careers page. Less competitive than e-commerce unicorns."},
+    {rank:80,company:"OYO Rooms (OYO Tech)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — OYO Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.oyorooms.com/careers/",tip:"Hospitality-tech. Backend + booking systems. Your backend stack matches. OYO has been restructuring — intern intake varies. Monitor LinkedIn and careers page actively. Good brand + product experience."},
+    {rank:81,company:"Paytm (One97 Communications)",opp:"SDE Intern / Software Developer Intern",type:"Direct Internship",elig:"Pre-final BTech; Java/Python; Noida/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Paytm Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:28,link:"https://paytm.com/careers/",tip:"Payments + fintech at massive scale. Backend + distributed systems. Note: Paytm has undergone leadership changes — verify current intern intake. Your Python/backend + payments domain knowledge is a strong fit. Apply via careers portal."},
+    {rank:82,company:"Pepperfry",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai",role:"Backend SDE Intern",deadline:"Rolling — Pepperfry Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.pepperfry.com/media/html/careers.html",tip:"Furniture e-commerce. Backend + catalog/search systems. Niche domain. Apply via LinkedIn. Less competition from pure CS folks who prefer more glamorous companies. Decent learning environment."},
+    {rank:83,company:"Pharmeasy",opp:"SDE Intern (Backend)",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Mumbai",role:"Backend SDE Intern",deadline:"Rolling — Pharmeasy Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://pharmeasy.in/careers",tip:"Health-tech + pharma logistics. Your backend + Python skills fit. Healthcare data systems are interesting engineering problems. Apply via LinkedIn. Note: company has had funding challenges — verify stability before applying."},
+    {rank:84,company:"Porter (Logistics)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Porter Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://porter.in/careers",tip:"Last-mile logistics unicorn. Real-time routing + dispatch systems = interesting backend problems. Your backend + Docker/cloud skills are relevant. Smaller company = high intern ownership. Tier-2 friendly."},
+    {rank:85,company:"Practo",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Practo Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://practo.com/company/careers",tip:"Health-tech SaaS. Backend + health data systems. Your Django/Python background is a strong match for their API-first platform. 2 rounds. Apply via LinkedIn + careers page."},
+    {rank:86,company:"Reddit (India Tech — Bangalore)",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong DSA + distributed systems; Bangalore",role:"SWE Intern",deadline:"Rolling — Reddit Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:12,link:"https://www.redditinc.com/careers",tip:"Reddit has a Bangalore engineering office. Less known = less applicant competition compared to other US cos with India offices. Strong DSA + backend + social platform systems knowledge helps. Apply via Reddit careers."},
+    {rank:87,company:"Samsung PRISM",opp:"PRISM Developer Program (Research Collaboration)",type:"Program",elig:"BTech 2nd–4th year; project-based; mentor-guided; all colleges",role:"Research Developer Fellow",deadline:"Applications Jan–Mar each year; next cycle Jan 2027",urgent:false,status:"Closed",fit:"High",diff:"M",prob:38,link:"https://research.samsung.com/prism",tip:"Your IoT project Bhumicare is a direct fit for Samsung PRISM's embedded + smart systems tracks. This is a structured research program, not a traditional internship, but leads to Samsung referrals and PPOs. One of the highest conversion-to-PPO programs in India. Apply next Jan."},
+    {rank:88,company:"Square / Block (India)",opp:"Software Engineer Intern",type:"Direct Internship",elig:"Pre-final BTech CS; strong DSA + payments knowledge; Bangalore",role:"SWE/Backend Intern",deadline:"Rolling — Block Inc Careers",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:11,link:"https://careers.squareup.com/us/en",tip:"Block Inc (Square + Cash App + Tidal). Payments + fintech. Small India presence but growing. Strong backend + distributed systems prep needed. Apply via Block careers page."},
+    {rank:89,company:"Udaan",opp:"Software Intern (Backend)",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Udaan Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://udaan.com/careers.html",tip:"B2B e-commerce unicorn. Backend + supply chain systems. Your backend skills fit. Less glamorous consumer brand but solid engineering problems and good PPO culture. Apply via LinkedIn."},
+    {rank:90,company:"Unacademy",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Unacademy Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://unacademy.com/careers",tip:"Ed-tech. Video streaming + content delivery + backend. Python heavy. Your backend skills match. Note: ed-tech sector has seen layoffs — verify current internship intake before applying. When open, Tier-2 friendly."},
+    {rank:91,company:"Vedantu",opp:"SDE Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Vedantu Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:24,link:"https://www.vedantu.com/careers",tip:"Ed-tech + live tutoring platform. Backend + real-time video/WebRTC systems. Python + backend is their core stack. Same caveat as Unacademy — verify current hiring health. Good ML application potential in personalized learning."},
+    {rank:92,company:"VMware / Broadcom India",opp:"Member of Technical Staff (MTS) Intern",type:"Direct Internship",elig:"Pre-final BTech CS; systems programming + cloud; Bangalore/Pune",role:"SWE/Systems Intern",deadline:"Rolling — Broadcom Careers (post-acquisition)",urgent:false,status:"Open",fit:"Medium",diff:"H",prob:15,link:"https://careers.broadcom.com/",tip:"VMware was acquired by Broadcom in 2023. Intern programs continue under Broadcom. Cloud + virtualization + Linux is their world — your Linux/shell scripting + AWS knowledge is relevant. Higher bar but stable MNC environment."},
+    {rank:93,company:"Zoomcar",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Zoomcar Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:25,link:"https://www.zoomcar.com/careers",tip:"Self-drive car rental platform. IoT + backend systems (vehicle tracking = IoT adjacent to your Bhumicare work). Python backend. Less competition. Tier-2 friendly. Apply via LinkedIn."},
+    {rank:94,company:"ZS Associates",opp:"Business Technology Solutions Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥8.0; Pune/Delhi",role:"Tech Analyst / SWE Intern",deadline:"Applications open Aug–Oct each year",urgent:false,status:"Closed",fit:"Medium",diff:"H",prob:14,link:"https://www.zs.com/careers",tip:"Pharma + healthcare consulting + tech. Analytical + tech hybrid role. Python + SQL + data skills are valued. High GPA bar (8+). More structured corporate environment. Apply in Aug–Sep 2026."},
+    {rank:95,company:"Airtel (Airtel X Labs)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS/EE; Python/backend; Gurgaon/Bangalore",role:"SWE/Backend Intern",deadline:"Rolling — Airtel Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.airtel.in/airtel-thanks/careers/",tip:"Telecom-tech + 5G + cloud infra. Airtel X Labs is their innovation arm. Your cloud + backend skills are relevant. Less competitive than pure product startups. Good for exposure to telecom-scale infrastructure."},
+    {rank:96,company:"Bajaj Finserv Tech",opp:"Software / IT Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.0; Pune",role:"SWE/IT Intern",deadline:"Rolling — Bajaj Finserv Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://www.bajajfinserv.in/careers",tip:"NBFC + fintech. Backend + data systems. Stable large-company environment. Less exciting engineering than startups but good resume brand for finance-adjacent roles. Apply directly."},
+    {rank:97,company:"HP India (R&D)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech CS/EE; Python/C++; Bangalore/Chennai",role:"SWE Intern",deadline:"Rolling — HP Careers",urgent:false,status:"Open",fit:"Medium",diff:"M",prob:22,link:"https://jobs.hp.com/",tip:"HP India R&D has a Bangalore office. Software + firmware + cloud. Your backend + Linux skills are relevant. MNC = structured internship experience. Less competition vs pure product companies. Apply via HP Jobs portal."},
+    {rank:98,company:"KPMG India (Tech Consulting)",opp:"Technology Intern / Digital Intern",type:"Direct Internship",elig:"Pre-final BTech CS; CGPA ≥7.5; multiple cities",role:"Tech Analyst Intern",deadline:"Applications open Sep–Nov each year",urgent:false,status:"Closed",fit:"Medium",diff:"M",prob:20,link:"https://home.kpmg/in/en/home/careers.html",tip:"Big-4 tech consulting. Less pure SWE and more tech advisory/implementation. Good brand name. Your cloud + CI/CD knowledge is relevant for DevOps consulting tracks. Apply in Oct 2026."},
+    {rank:99,company:"PayU (Prosus)",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/Java; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — PayU Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://corporate.payu.com/careers/",tip:"Payments + fintech under Prosus/Naspers. Your backend + payments adjacent knowledge is a strong match. Mid-sized company = good intern ownership. Apply via LinkedIn + PayU careers page."},
+    {rank:100,company:"Urban Company",opp:"Software Intern",type:"Direct Internship",elig:"Pre-final BTech; Python/backend; Gurgaon/Bangalore",role:"Backend SDE Intern",deadline:"Rolling — Urban Company Careers",urgent:false,status:"Open",fit:"High",diff:"M",prob:26,link:"https://www.urbancompany.com/careers",tip:"Home services marketplace + on-demand platform. Real-time dispatch + backend systems. Your backend + Docker skills are relevant. Growing tech team. Tier-2 friendly culture. Apply via LinkedIn. Good for distributed systems exposure."},
+    ];
+
+    const typeColors = {
+    "Direct Internship":"b-dir","Hackathon":"b-hack","Coding Challenge":"b-comp",
+    "Fellowship":"b-fel","Program":"b-prog","Open Source":"b-open"
+    };
+
+    function probColor(p){
+    if(p>=35)return"#3B6D11";
+    if(p>=20)return"#854F0B";
+    return"#A32D2D";
+    }
+
+    function fitClass(f){
+    return f==="High"?"fit-high":f==="Medium"?"fit-med":"fit-low";
+    }
+    function diffClass(d){
+    return d==="E"?"diff-e":d==="M"?"diff-m":d==="H"?"diff-h":"diff-vh";
+    }
+    function diffLabel(d){
+    return d==="E"?"Easy":d==="M"?"Medium":d==="H"?"Hard":"Very Hard";
+    }
+
+    let sortKey="rank",sortDir=1;
+    let expandedRows=new Set();
+
+    function render(){
+    const q=document.getElementById("search").value.toLowerCase();
+    const ft=document.getElementById("fType").value;
+    const ff=document.getElementById("fFit").value;
+    const fs=document.getElementById("fStatus").value;
+    const so=document.getElementById("fSort").value;
+
+    let rows=[...DATA].filter(r=>{
+        if(q&&!r.company.toLowerCase().includes(q)&&!r.opp.toLowerCase().includes(q)&&!r.role.toLowerCase().includes(q))return false;
+        if(ft&&!r.type.includes(ft))return false;
+        if(ff&&r.fit!==ff)return false;
+        if(fs&&r.status!==fs)return false;
+        return true;
+    });
+
+    rows.sort((a,b)=>{
+        let av,bv;
+        if(so==="rank"){av=a.rank;bv=b.rank;}
+        else if(so==="prob"){av=-a.prob;bv=-b.prob;}
+        else if(so==="company"){av=a.company;bv=b.company;}
+        else{av=a.deadline;bv=b.deadline;}
+        return av<bv?-1:av>bv?1:0;
+    });
+
+    const tbody=document.getElementById("tbody");
+    tbody.innerHTML="";
+
+    let urgentC=0,highC=0,openC=0;
+    DATA.forEach(r=>{
+        if(r.urgent)urgentC++;
+        if(r.fit==="High")highC++;
+        if(r.status==="Open")openC++;
+    });
+    document.getElementById("sTotal").textContent=DATA.length;
+    document.getElementById("sUrgent").textContent=urgentC;
+    document.getElementById("sHigh").textContent=highC;
+    document.getElementById("sOpen").textContent=openC;
+
+    if(rows.length===0){
+        document.getElementById("noResults").style.display="block";
+        return;
+    }
+    document.getElementById("noResults").style.display="none";
+
+    rows.forEach((r,i)=>{
+        const tr=document.createElement("tr");
+        const tipId="tip-"+r.rank;
+        const tipOpen=expandedRows.has(r.rank);
+        tr.innerHTML=`
+        <td style="color:var(--color-text-tertiary);font-size:11px">${r.rank}</td>
+        <td style="font-weight:500;white-space:nowrap">${r.company}${r.urgent?` <span class="flag-urgent">Urgent</span>`:""}</td>
+        <td style="min-width:140px">${r.opp}</td>
+        <td><span class="badge ${typeColors[r.type]||'b-dir'}">${r.type}</span></td>
+        <td style="font-size:11px;color:var(--color-text-secondary);max-width:160px">${r.elig}</td>
+        <td style="font-size:11px;white-space:nowrap">${r.role}</td>
+        <td style="font-size:11px;white-space:nowrap${r.urgent?";color:#791F1F;font-weight:500":""}">${r.deadline}</td>
+        <td class="${fitClass(r.fit)}">${r.fit}</td>
+        <td class="${diffClass(r.diff)}">${diffLabel(r.diff)}</td>
+        <td>
+            <div class="prob-bar">
+            <div class="prob-track"><div class="prob-fill" style="width:${Math.min(r.prob*2,100)}%;background:${probColor(r.prob)}"></div></div>
+            <span style="font-size:11px;font-weight:500;color:${probColor(r.prob)};min-width:28px">${r.prob}%</span>
+            </div>
+        </td>
+        <td><a class="link-btn" href="${r.link}" target="_blank">Apply <i class="ti ti-external-link" aria-hidden="true" style="font-size:11px"></i></a></td>
+        <td>
+            <div class="note" id="${tipId}" style="${tipOpen?"":"max-height:36px;overflow:hidden"}">
+            ${r.tip}
+            </div>
+            <span class="tip-toggle" onclick="toggleTip(${r.rank})">${tipOpen?"Show less ▲":"Show more ▼"}</span>
+        </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    }
+
+    function toggleTip(rank){
+    if(expandedRows.has(rank))expandedRows.delete(rank);
+    else expandedRows.add(rank);
+    render();
+    }
+
+    document.getElementById("search").addEventListener("input",render);
+    document.getElementById("fType").addEventListener("change",render);
+    document.getElementById("fFit").addEventListener("change",render);
+    document.getElementById("fStatus").addEventListener("change",render);
+    document.getElementById("fSort").addEventListener("change",render);
+
+    render();
+    </script>
+</body>
+</html>
